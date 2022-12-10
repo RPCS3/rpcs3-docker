@@ -61,8 +61,8 @@ RUN \
 	rm ./*.tar.gz
 
 # Need to manually build vulkan headers and libvulkan
-ENV VULKAN_HEADER_VER=1.2.198.0
-ENV VULKAN_LOADER_VER=1.2.198.1
+ENV VULKAN_HEADER_VER=1.2.224.0
+ENV VULKAN_LOADER_VER=1.2.224.1
 RUN \
 	curl -sSfL -o Vulkan-Headers.tar.gz https://github.com/KhronosGroup/Vulkan-Headers/archive/sdk-${VULKAN_HEADER_VER}.tar.gz && \
 	tar -xf Vulkan-Headers*.tar.gz && \
