@@ -48,7 +48,7 @@ RUN \
 	cmake --version
 
 # We gotta build our own version of Ninja as well
-ENV NINJAVER=1.11.0
+ENV NINJAVER=1.11.1
 RUN \
 	curl -sSfL -o ninja.tar.gz https://github.com/ninja-build/ninja/archive/v${NINJAVER}.tar.gz && \
 	tar -xf ninja.tar.gz && \
@@ -61,8 +61,8 @@ RUN \
 	rm ./*.tar.gz
 
 # Need to manually build vulkan headers and libvulkan
-ENV VULKAN_HEADER_VER=1.2.224.0
-ENV VULKAN_LOADER_VER=1.2.224.1
+ENV VULKAN_HEADER_VER=1.3.224.0
+ENV VULKAN_LOADER_VER=1.3.224.1
 RUN \
 	curl -sSfL -o Vulkan-Headers.tar.gz https://github.com/KhronosGroup/Vulkan-Headers/archive/sdk-${VULKAN_HEADER_VER}.tar.gz && \
 	tar -xf Vulkan-Headers*.tar.gz && \
