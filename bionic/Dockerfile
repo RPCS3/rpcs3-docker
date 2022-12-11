@@ -1,33 +1,25 @@
 FROM ubuntu:18.04
 LABEL maintainer="hcorion"
 
-
-ENV QTVER=5.15.2
-ENV QTVERMIN=515
 ENV LLVMVER=14
-ENV GCCVER=11
 
 ENV CLANG_BINARY=clang-${LLVMVER}
 ENV CLANGXX_BINARY=clang++-${LLVMVER}
 ENV LLD_BINARY=lld-${LLVMVER}
-ENV GCC_BINARY=gcc-${GCCVER}
-ENV GXX_BINARY=g++-${GCCVER}
 
 RUN \
 	apt-get update -y && \
 	apt-get install -y curl libcurl4-openssl-dev software-properties-common apt-transport-https && \
 	curl -Lvs https://apt.llvm.org/llvm-snapshot.gpg.key | apt-key add - && \
-	add-apt-repository -y ppa:beineri/opt-qt-${QTVER}-bionic && \
 	add-apt-repository -y ppa:ubuntu-toolchain-r/test && \
 	add-apt-repository -y "deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic-${LLVMVER} main" && \
 	apt-get update -y --fix-missing && \
 	\
-	apt-get -qq install -y \
-	build-essential binutils $GCC_BINARY $GXX_BINARY git ccache bc $CLANG_BINARY $CLANGXX_BINARY $LLD_BINARY \
+	apt-get install -y \
+	build-essential binutils git ccache bc $CLANG_BINARY $CLANGXX_BINARY $LLD_BINARY \
 	libasound2-dev libopenal-dev freeglut3-dev libudev-dev libevdev-dev libpulse-dev libxrandr-dev libglvnd-dev \
 	libwayland-dev libwayland-cursor0 libwayland-client0 libwayland-server0 \
-	desktop-file-utils dput gnupg pbuilder ubuntu-dev-tools apt-file \
-	qt${QTVERMIN}base qt${QTVERMIN}declarative qt${QTVERMIN}xmlpatterns qt${QTVERMIN}svg qt${QTVERMIN}multimedia && \
+	desktop-file-utils dput gnupg pbuilder ubuntu-dev-tools apt-file && \
 	apt-get install --only-upgrade dpkg && \
 	apt-get clean autoclean && \
 	apt-get autoremove --yes && \
@@ -38,6 +30,26 @@ RUN \
 	curl -sSfLO http://http.us.debian.org/debian/pool/main/g/glew/libglew-dev_2.2.0-4_amd64.deb && \
 	dpkg -i ./*.deb && \
 	rm ./*.deb
+
+ENV GCCVERFULL=12.2.0
+ENV GCCVER=12
+ENV GCC_BINARY=gcc-${GCCVER}
+ENV GXX_BINARY=g++-${GCCVER}
+
+RUN \
+	curl -sSfL -o gcc.tar.gz https://ftp.gnu.org/gnu/gcc/gcc-12.2.0/gcc-12.2.0.tar.gz && \
+	tar -xf gcc.tar.gz && \
+	cd gcc && \
+	./configure --prefix=/usr --libdir=/usr/lib --libexecdir=/usr/lib --mandir=/usr/share/man --infodir=/usr/share/info \
+      --with-bugurl=https://bugs.archlinux.org/ --with-build-config=bootstrap-lto --with-linker-hash-style=gnu --with-system-zlib \
+      --enable-__cxa_atexit --enable-cet=auto --enable-checking=release --enable-clocale=gnu --enable-gnu-indirect-function \
+      --enable-gnu-unique-object --enable-libstdcxx-backtrace --enable-link-serialization=1 --enable-linker-build-id \
+      --enable-lto --enable-multilib --enable-plugin --enable-shared --enable-threads=posix --disable-libssp --disable-libstdcxx-pch \
+      --disable-werror \
+	  --enable-languages=c,c++,lto --enable-bootstrap && \
+	  make -O bootstrap && \
+	  make && \
+	  make install
 
 # Setup newer CMake
 ENV CMAKEVER=3.16.9
@@ -112,6 +124,17 @@ RUN \
 	cd .. && \
 	rm -r ./shellcheck* && \
 	shellcheck --version
+
+ENV QTVER=6.4.0
+ENV QTVERMIN=64
+RUN \
+	curl -sSfL -o qt.tar.xz https://download.qt.io/official_releases/qt/${QTVER%.*}/$QTVER/single/qt-everywhere-src-${QTVER}.tar.xz && \
+	tar -xf qt.tar.xz && \
+	cd qt && \
+	mkdir build && cd build && \
+	cmake ../ -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=$CLANG_BINARY -DCMAKE_CXX_COMPILER=$CLANGXX_BINARY \
+	-DCMAKE_INSTALL_PREFIX=/usr
+# qt${QTVERMIN}base qt${QTVERMIN}declarative qt${QTVERMIN}xmlpatterns qt${QTVERMIN}svg qt${QTVERMIN}multimedia
 
 # Need to patch Qt for compatibility with GCC 11
 # See https://codereview.qt-project.org/c/qt/qtbase/+/339417 and https://github.com/RPCS3/rpcs3/issues/10291
