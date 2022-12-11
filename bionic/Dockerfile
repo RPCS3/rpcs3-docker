@@ -34,8 +34,8 @@ RUN \
 	rm -rf /var/lib/apt
 	
 RUN \
-	curl -sSfLO http://http.us.debian.org/debian/pool/main/g/glew/libglew2.2_2.2.0-4_amd64.deb && \
-	curl -sSfLO http://http.us.debian.org/debian/pool/main/g/glew/libglew-dev_2.2.0-4_amd64.deb && \
+	curl -sSfLO http://http.us.debian.org/debian/pool/main/g/glew/libglew2.2_2.2.0-4+b1_amd64.deb && \
+	curl -sSfLO http://http.us.debian.org/debian/pool/main/g/glew/libglew-dev_2.2.0-4+b1_amd64.deb && \
 	dpkg -i ./*.deb && \
 	rm ./*.deb
 
