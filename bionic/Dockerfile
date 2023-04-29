@@ -60,6 +60,22 @@ RUN \
 	rm -r ./ninja-* && \
 	rm ./*.tar.gz
 
+ENV STATIC_LLVM_VER=16.0.2
+RUN \
+	curl -sSfLO https://github.com/llvm/llvm-project/releases/download/llvmorg-${STATIC_LLVM_VER}/llvm-project-${STATIC_LLVM_VER}.src.tar.xz && \
+	tar -xf llvm-*.tar.xz && \
+	cd llvm-*/llvm && \
+	mkdir build && cd build && \
+	CXXFLAGS="-msse -msse2" cmake .. -G Ninja -DCMAKE_C_COMPILER=$CLANG_BINARY -DCMAKE_CXX_COMPILER=$CLANGXX_BINARY -DCMAKE_INSTALL_PREFIX=/opt/llvm  \
+		-DLLVM_ENABLE_CXX1Y=ON -DLLVM_TARGETS_TO_BUILD="X86" -DCMAKE_BUILD_TYPE=Release -DLLVM_USE_INTEL_JITEVENTS=ON -DLLVM_USE_PERF=ON \
+		-DLLVM_BUILD_RUNTIME=OFF -DLLVM_BUILD_TOOLS=OFF -DLLVM_INCLUDE_DOCS=OFF -DLLVM_INCLUDE_EXAMPLES=OFF -DLLVM_INCLUDE_TESTS=OFF -DLLVM_INCLUDE_TOOLS=OFF \
+		-DLLVM_INCLUDE_UTILS=OFF -DLLVM_INCLUDE_BENCHMARKS=OFF -DWITH_POLLY=OFF -DLLVM_ENABLE_Z3_SOLVER=OFF && \
+	ninja && \
+	ninja install && \
+	cd ../../.. && \
+	rm ./*.tar.xz && \
+	rm -r llvm-*
+
 # Need to manually build vulkan headers and libvulkan
 ENV VULKAN_HEADER_VER=1.3.224.0
 ENV VULKAN_LOADER_VER=1.3.224.1
@@ -89,7 +105,7 @@ RUN \
 	rm -r ./Vulkan-Loader*
 
 # We need to build a custom version of SDL2 as well
-ENV SDL2VER=2.26.1
+ENV SDL2VER=2.26.5
 RUN \
 	curl -sSfL -o SDL2.tar.gz https://www.libsdl.org/release/SDL2-${SDL2VER}.tar.gz && \
 	tar -xf SDL2.tar.gz && \
@@ -103,7 +119,7 @@ RUN \
 	rm ./*.tar.gz && \
 	rm -r ./SDL2*
 
-ENV SHELLCHECKVER=0.8.0
+ENV SHELLCHECKVER=0.9.0
 RUN \
 	curl -sSfL -o shellcheck.tar.gz https://github.com/koalaman/shellcheck/releases/download/v${SHELLCHECKVER}/shellcheck-v${SHELLCHECKVER}.linux.x86_64.tar.xz && \
 	tar -xf shellcheck.tar.gz && \
