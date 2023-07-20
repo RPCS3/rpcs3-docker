@@ -24,8 +24,10 @@ RUN \
 	build-essential binutils git ccache bc $CLANG_BINARY $CLANGXX_BINARY $LLD_BINARY \
 	libasound2-dev libopenal-dev freeglut3-dev libudev-dev libevdev-dev libpulse-dev libxrandr-dev libglvnd-dev \
 	'^libxcb.*-dev' libxcb-cursor0 libx11-xcb-dev libxcb-util-dev \
+	libssl-dev libfontconfig1-dev \
+	gstreamer1.0-plugins-good gstreamer1.0-plugins-bad libgstreamer1.0-dev libgstreamer-plugins-bad1.0-dev libgstreamer-plugins-base1.0-dev libgstreamer-plugins-good1.0-dev libv4l-dev \
 	libwayland-dev libwayland-cursor0 libxkbcommon-x11-dev libwayland-client0 libwayland-server0 \
-	desktop-file-utils dput gnupg pbuilder ubuntu-dev-tools apt-file && \
+	desktop-file-utils dput gnupg pbuilder ubuntu-dev-tools apt-file patchelf && \
 	apt-get install --only-upgrade dpkg && \
 	apt-get clean autoclean && \
 	apt-get autoremove --yes && \
@@ -102,14 +104,14 @@ RUN \
 	rm ./*.tar.gz && \
 	rm -r ./Vulkan-Loader*
 
-ENV QTVER=6.5.0
+ENV QTVER=6.5.2
 ENV QTVERMIN=65
 RUN \
 	curl -sSfL -o qt.tar.xz https://download.qt.io/official_releases/qt/${QTVER%.*}/$QTVER/single/qt-everywhere-src-${QTVER}.tar.xz && \
 	tar -xf qt.tar.xz && \
 	cd  qt-everywhere-src-* && \
 	mkdir build && cd build && \
-	cmake ../ -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=$CLANG_BINARY -DCMAKE_CXX_COMPILER=$CLANGXX_BINARY \
+	cmake ../ -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=$CLANG_BINARY -DCMAKE_CXX_COMPILER=$CLANGXX_BINARY -DFEATURE_gstreamer=ON -DFEATURE_fontconfig=ON -DFEATURE_system_freetype=ON -DFEATURE_system_xcb_xinput=ON -DFEATURE_openssl_linked=ON \
 	-DCMAKE_INSTALL_PREFIX=/usr && \
 	ninja && \
 	ninja install && \
