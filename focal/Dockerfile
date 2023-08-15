@@ -24,8 +24,8 @@ RUN \
 	build-essential binutils git ccache bc $CLANG_BINARY $CLANGXX_BINARY $LLD_BINARY \
 	libasound2-dev libopenal-dev freeglut3-dev libudev-dev libevdev-dev libpulse-dev libxrandr-dev libglvnd-dev \
 	'^libxcb.*-dev' libxcb-cursor0 libx11-xcb-dev libxcb-util-dev \
-	libssl-dev libfontconfig1-dev \
-	gstreamer1.0-plugins-good gstreamer1.0-plugins-bad libgstreamer1.0-dev libgstreamer-plugins-bad1.0-dev libgstreamer-plugins-base1.0-dev libgstreamer-plugins-good1.0-dev libv4l-dev \
+	libssl-dev libfontconfig1-dev libv4l-dev yasm libgmp-dev libmp3lame-dev libopenjp2-7-dev libjack-dev \
+	libtheora-dev libwebp-dev libopus-dev libvorbis-dev libvpx-dev libx264-dev libxml2-dev ocl-icd-opencl-dev \
 	libwayland-dev libwayland-cursor0 libxkbcommon-x11-dev libwayland-client0 libwayland-server0 \
 	desktop-file-utils dput gnupg pbuilder ubuntu-dev-tools apt-file patchelf && \
 	apt-get install --only-upgrade dpkg && \
@@ -60,7 +60,7 @@ RUN \
 	rm -r ./ninja-* && \
 	rm ./*.tar.gz
 
-ENV STATIC_LLVM_VER=16.0.2
+ENV STATIC_LLVM_VER=16.0.6
 RUN \
 	curl -sSfLO https://github.com/llvm/llvm-project/releases/download/llvmorg-${STATIC_LLVM_VER}/llvm-project-${STATIC_LLVM_VER}.src.tar.xz && \
 	tar -xf llvm-*.tar.xz && \
@@ -104,6 +104,36 @@ RUN \
 	rm ./*.tar.gz && \
 	rm -r ./Vulkan-Loader*
 
+ENV FFMPEG_NV_CODEC_VER=12.0.16.0
+RUN \
+	curl -sSfLO https://github.com/FFmpeg/nv-codec-headers/releases/download/n${FFMPEG_NV_CODEC_VER}/nv-codec-headers-${FFMPEG_NV_CODEC_VER}.tar.gz && \
+	tar -xf ./nv-codec-headers-*.tar.gz && \
+	cd nv-codec-headers-* && \
+	make && \
+	PREFIX=/usr make install && \
+	cd ../.. && \
+	rm ./*.tar.gz && \
+	rm -r ./nv-codec-headers-*
+
+ENV FFMPEGVER=6.0
+RUN \
+	curl -sSfLO https://ffmpeg.org/releases/ffmpeg-${FFMPEGVER}.tar.xz && \
+	tar -xf ./ffmpeg-*.tar.xz && \
+	cd ffmpeg-* && \
+	./configure \
+    --prefix=/usr --disable-debug --disable-static --disable-stripping --enable-fontconfig --enable-gmp \
+	--enable-gpl \
+	--enable-libfreetype --enable-libjack --enable-libmp3lame \
+	--enable-libopenjpeg --enable-libopus --enable-libpulse \
+	--enable-libtheora --enable-libv4l2 \
+	--enable-libvorbis --enable-libvpx --enable-libwebp --enable-libx264 --enable-libxcb --enable-libxml2 \
+	--enable-nvdec --enable-nvenc --enable-ffnvcodec --enable-opencl --enable-opengl --enable-shared --enable-version3 --enable-vulkan && \
+	make && \
+	PREFIX=/usr make install && \
+	cd ../.. && \
+	rm ./*.tar.xz && \
+	rm -r ./ffmpeg-*
+
 ENV QTVER=6.5.2
 ENV QTVERMIN=65
 RUN \
@@ -111,7 +141,7 @@ RUN \
 	tar -xf qt.tar.xz && \
 	cd  qt-everywhere-src-* && \
 	mkdir build && cd build && \
-	cmake ../ -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=$CLANG_BINARY -DCMAKE_CXX_COMPILER=$CLANGXX_BINARY -DFEATURE_gstreamer=ON -DFEATURE_fontconfig=ON -DFEATURE_system_freetype=ON -DFEATURE_system_xcb_xinput=ON -DFEATURE_openssl_linked=ON \
+	cmake ../ -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=$CLANG_BINARY -DCMAKE_CXX_COMPILER=$CLANGXX_BINARY -DFEATURE_ffmpeg=ON -DFEATURE_gstreamer=OFF -DFEATURE_fontconfig=ON -DFEATURE_system_freetype=ON -DFEATURE_system_xcb_xinput=ON -DFEATURE_openssl_linked=ON \
 	-DCMAKE_INSTALL_PREFIX=/usr && \
 	ninja && \
 	ninja install && \
@@ -120,7 +150,7 @@ RUN \
 	rm qt.tar.xz
 
 # We need to build a custom version of SDL2 as well
-ENV SDL2VER=2.26.5
+ENV SDL2VER=2.28.2
 RUN \
 	curl -sSfL -o SDL2.tar.gz https://www.libsdl.org/release/SDL2-${SDL2VER}.tar.gz && \
 	tar -xf SDL2.tar.gz && \
