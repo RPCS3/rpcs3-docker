@@ -134,7 +134,7 @@ RUN \
 	rm ./*.tar.xz && \
 	rm -r ./ffmpeg-*
 
-ENV QTVER=6.5.2
+ENV QTVER=6.5.3
 ENV QTVERMIN=65
 RUN \
 	curl -sSfL -o qt.tar.xz https://download.qt.io/official_releases/qt/${QTVER%.*}/$QTVER/single/qt-everywhere-src-${QTVER}.tar.xz && \
@@ -150,7 +150,7 @@ RUN \
 	rm qt.tar.xz
 
 # We need to build a custom version of SDL2 as well
-ENV SDL2VER=2.28.2
+ENV SDL2VER=2.28.4
 RUN \
 	curl -sSfL -o SDL2.tar.gz https://www.libsdl.org/release/SDL2-${SDL2VER}.tar.gz && \
 	tar -xf SDL2.tar.gz && \
