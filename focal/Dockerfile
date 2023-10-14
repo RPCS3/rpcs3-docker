@@ -1,13 +1,13 @@
 FROM ubuntu:20.04
 LABEL maintainer="hcorion"
 
-ENV LLVMVER=16
+ENV LLVMVER=17
 
 ENV CLANG_BINARY=clang-${LLVMVER}
 ENV CLANGXX_BINARY=clang++-${LLVMVER}
 ENV LLD_BINARY=lld-${LLVMVER}
 
-ENV GCCVER=11
+ENV GCCVER=13
 ENV GCC_BINARY=gcc-${GCCVER}
 ENV GXX_BINARY=g++-${GCCVER}
 
@@ -120,7 +120,7 @@ RUN \
 	curl -sSfLO https://ffmpeg.org/releases/ffmpeg-${FFMPEGVER}.tar.xz && \
 	tar -xf ./ffmpeg-*.tar.xz && \
 	cd ffmpeg-* && \
-	./configure \
+	CFLAGS=-Os CXXFLAGS=-Os ./configure \
     --prefix=/usr --disable-debug --disable-static --disable-stripping --enable-fontconfig --enable-gmp \
 	--enable-gpl \
 	--enable-libfreetype --enable-libjack --enable-libmp3lame \
@@ -134,15 +134,17 @@ RUN \
 	rm ./*.tar.xz && \
 	rm -r ./ffmpeg-*
 
-ENV QTVER=6.5.3
-ENV QTVERMIN=65
+ENV QTVER=6.6.0
+ENV QTVERMIN=66
 RUN \
 	curl -sSfL -o qt.tar.xz https://download.qt.io/official_releases/qt/${QTVER%.*}/$QTVER/single/qt-everywhere-src-${QTVER}.tar.xz && \
 	tar -xf qt.tar.xz && \
 	cd  qt-everywhere-src-* && \
 	mkdir build && cd build && \
-	cmake ../ -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=$CLANG_BINARY -DCMAKE_CXX_COMPILER=$CLANGXX_BINARY -DFEATURE_ffmpeg=ON -DFEATURE_gstreamer=OFF -DFEATURE_fontconfig=ON -DFEATURE_system_freetype=ON -DFEATURE_system_xcb_xinput=ON -DFEATURE_openssl_linked=ON \
+	cmake ../ -G Ninja -DCMAKE_BUILD_TYPE=MinSizeRel -DCMAKE_C_COMPILER=$CLANG_BINARY -DCMAKE_CXX_COMPILER=$CLANGXX_BINARY -DFEATURE_ffmpeg=ON -DFEATURE_gstreamer=OFF -DFEATURE_fontconfig=ON -DFEATURE_system_freetype=ON -DFEATURE_system_xcb_xinput=ON -DFEATURE_openssl_linked=ON \
 	-DCMAKE_INSTALL_PREFIX=/usr && \
+	echo "Need to cleanup for latest GCC" && \
+	sed -i 's/std::uint32_t/uint32_t/' ../qt3d/src/3rdparty/assimp/src/code/AssetLib/FBX/FBXBinaryTokenizer.cpp && \
 	ninja && \
 	ninja install && \
 	cd ../../ && \
