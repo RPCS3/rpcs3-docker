@@ -77,10 +77,10 @@ RUN \
 	rm -r llvm-*
 
 # Need to manually build vulkan headers and libvulkan
-ENV VULKAN_HEADER_VER=1.3.224.0
-ENV VULKAN_LOADER_VER=1.3.224.1
+ENV VULKAN_HEADER_VER=1.3.268.0
+ENV VULKAN_LOADER_VER=1.3.268.0
 RUN \
-	curl -sSfL -o Vulkan-Headers.tar.gz https://github.com/KhronosGroup/Vulkan-Headers/archive/sdk-${VULKAN_HEADER_VER}.tar.gz && \
+	curl -sSfL -o Vulkan-Headers.tar.gz https://github.com/KhronosGroup/Vulkan-Headers/archive/vulkan-sdk-${VULKAN_HEADER_VER}.tar.gz && \
 	tar -xf Vulkan-Headers*.tar.gz && \
 	cd Vulkan-Headers* && \
 	mkdir build && cd build && \
@@ -92,7 +92,7 @@ RUN \
 	rm ./*.tar.gz && \
 	rm -r ./Vulkan-Headers*
 RUN \
-	curl -sSfL -o Vulkan-Loader.tar.gz https://github.com/KhronosGroup/Vulkan-Loader/archive/sdk-${VULKAN_LOADER_VER}.tar.gz && \
+	curl -sSfL -o Vulkan-Loader.tar.gz https://github.com/KhronosGroup/Vulkan-Loader/archive/vulkan-sdk-${VULKAN_LOADER_VER}.tar.gz && \
 	tar -xf Vulkan-Loader.tar.gz && \
 	cd Vulkan-Loader* && \
 	mkdir build && cd build && \
@@ -152,7 +152,7 @@ RUN \
 	rm qt.tar.xz
 
 # We need to build a custom version of SDL2 as well
-ENV SDL2VER=2.28.4
+ENV SDL2VER=2.28.5
 RUN \
 	curl -sSfL -o SDL2.tar.gz https://www.libsdl.org/release/SDL2-${SDL2VER}.tar.gz && \
 	tar -xf SDL2.tar.gz && \
