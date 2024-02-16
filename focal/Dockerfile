@@ -104,7 +104,7 @@ RUN \
 	rm ./*.tar.gz && \
 	rm -r ./Vulkan-Loader*
 
-ENV FFMPEG_NV_CODEC_VER=12.0.16.0
+ENV FFMPEG_NV_CODEC_VER=12.1.14.0
 RUN \
 	curl -sSfLO https://github.com/FFmpeg/nv-codec-headers/releases/download/n${FFMPEG_NV_CODEC_VER}/nv-codec-headers-${FFMPEG_NV_CODEC_VER}.tar.gz && \
 	tar -xf ./nv-codec-headers-*.tar.gz && \
@@ -115,7 +115,7 @@ RUN \
 	rm ./*.tar.gz && \
 	rm -r ./nv-codec-headers-*
 
-ENV FFMPEGVER=6.0
+ENV FFMPEGVER=6.1.1
 RUN \
 	curl -sSfLO https://ffmpeg.org/releases/ffmpeg-${FFMPEGVER}.tar.xz && \
 	tar -xf ./ffmpeg-*.tar.xz && \
@@ -134,7 +134,7 @@ RUN \
 	rm ./*.tar.xz && \
 	rm -r ./ffmpeg-*
 
-ENV QTVER=6.6.1
+ENV QTVER=6.6.2
 ENV QTVERMIN=66
 RUN \
 	curl -sSfL -o qt.tar.xz https://download.qt.io/official_releases/qt/${QTVER%.*}/$QTVER/single/qt-everywhere-src-${QTVER}.tar.xz && \
