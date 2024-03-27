@@ -32,7 +32,7 @@ RUN \
 	apt-get clean autoclean && \
 	apt-get autoremove --yes && \
 	rm -rf /var/lib/apt
-	
+
 RUN \
 	curl -sSfLO http://http.us.debian.org/debian/pool/main/g/glew/libglew2.2_2.2.0-4+b1_amd64.deb && \
 	curl -sSfLO http://http.us.debian.org/debian/pool/main/g/glew/libglew-dev_2.2.0-4+b1_amd64.deb && \
@@ -67,9 +67,9 @@ RUN \
 	cd llvm-*/llvm && \
 	mkdir build && cd build && \
 	CXXFLAGS="-msse -msse2" cmake .. -G Ninja -DCMAKE_C_COMPILER=$CLANG_BINARY -DCMAKE_CXX_COMPILER=$CLANGXX_BINARY -DCMAKE_INSTALL_PREFIX=/opt/llvm  \
-		-DLLVM_ENABLE_CXX1Y=ON -DLLVM_TARGETS_TO_BUILD="X86" -DCMAKE_BUILD_TYPE=Release -DLLVM_USE_INTEL_JITEVENTS=ON -DLLVM_USE_PERF=ON \
-		-DLLVM_BUILD_RUNTIME=OFF -DLLVM_BUILD_TOOLS=OFF -DLLVM_INCLUDE_DOCS=OFF -DLLVM_INCLUDE_EXAMPLES=OFF -DLLVM_INCLUDE_TESTS=OFF -DLLVM_INCLUDE_TOOLS=OFF \
-		-DLLVM_INCLUDE_UTILS=OFF -DLLVM_INCLUDE_BENCHMARKS=OFF -DWITH_POLLY=OFF -DLLVM_ENABLE_Z3_SOLVER=OFF && \
+	-DLLVM_ENABLE_CXX1Y=ON -DLLVM_TARGETS_TO_BUILD="X86" -DCMAKE_BUILD_TYPE=Release -DLLVM_USE_INTEL_JITEVENTS=ON -DLLVM_USE_PERF=ON \
+	-DLLVM_BUILD_RUNTIME=OFF -DLLVM_BUILD_TOOLS=OFF -DLLVM_INCLUDE_DOCS=OFF -DLLVM_INCLUDE_EXAMPLES=OFF -DLLVM_INCLUDE_TESTS=OFF -DLLVM_INCLUDE_TOOLS=OFF \
+	-DLLVM_INCLUDE_UTILS=OFF -DLLVM_INCLUDE_BENCHMARKS=OFF -DWITH_POLLY=OFF -DLLVM_ENABLE_Z3_SOLVER=OFF && \
 	ninja && \
 	ninja install && \
 	cd ../../.. && \
@@ -121,7 +121,7 @@ RUN \
 	tar -xf ./ffmpeg-*.tar.xz && \
 	cd ffmpeg-* && \
 	CFLAGS=-Os CXXFLAGS=-Os ./configure \
-    --prefix=/usr --disable-debug --disable-static --disable-stripping --enable-fontconfig --enable-gmp \
+	--prefix=/usr --disable-debug --disable-static --disable-stripping --enable-fontconfig --enable-gmp \
 	--enable-gpl \
 	--enable-libfreetype --enable-libjack --enable-libmp3lame \
 	--enable-libopenjpeg --enable-libopus --enable-libpulse \
@@ -134,7 +134,7 @@ RUN \
 	rm ./*.tar.xz && \
 	rm -r ./ffmpeg-*
 
-ENV QTVER=6.6.2
+ENV QTVER=6.6.3
 ENV QTVERMIN=66
 RUN \
 	curl -sSfL -o qt.tar.xz https://download.qt.io/official_releases/qt/${QTVER%.*}/$QTVER/single/qt-everywhere-src-${QTVER}.tar.xz && \
@@ -152,7 +152,7 @@ RUN \
 	rm qt.tar.xz
 
 # We need to build a custom version of SDL2 as well
-ENV SDL2VER=2.28.5
+ENV SDL2VER=2.30.1
 RUN \
 	curl -sSfL -o SDL2.tar.gz https://www.libsdl.org/release/SDL2-${SDL2VER}.tar.gz && \
 	tar -xf SDL2.tar.gz && \
