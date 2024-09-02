@@ -1,7 +1,7 @@
 FROM ubuntu:20.04
 LABEL maintainer="hcorion"
 
-ENV LLVMVER=17
+ENV LLVMVER=18
 
 ENV CLANG_BINARY=clang-${LLVMVER}
 ENV CLANGXX_BINARY=clang++-${LLVMVER}
@@ -60,7 +60,7 @@ RUN \
 	rm -r ./ninja-* && \
 	rm ./*.tar.gz
 
-ENV STATIC_LLVM_VER=16.0.6
+ENV STATIC_LLVM_VER=18.1.8
 RUN \
 	curl -sSfLO https://github.com/llvm/llvm-project/releases/download/llvmorg-${STATIC_LLVM_VER}/llvm-project-${STATIC_LLVM_VER}.src.tar.xz && \
 	tar -xf llvm-*.tar.xz && \
@@ -166,7 +166,7 @@ RUN \
 	rm ./*.tar.gz && \
 	rm -r ./SDL2*
 
-ENV SHELLCHECKVER=0.9.0
+ENV SHELLCHECKVER=0.10.0
 RUN \
 	curl -sSfL -o shellcheck.tar.gz https://github.com/koalaman/shellcheck/releases/download/v${SHELLCHECKVER}/shellcheck-v${SHELLCHECKVER}.linux.x86_64.tar.xz && \
 	tar -xf shellcheck.tar.gz && \
