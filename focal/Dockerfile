@@ -134,14 +134,14 @@ RUN \
 	rm ./*.tar.xz && \
 	rm -r ./ffmpeg-*
 
-ENV QTVER=6.6.3
-ENV QTVERMIN=66
+ENV QTVER=6.7.3
+ENV QTVERMIN=67
 RUN \
-	curl -sSfL -o qt.tar.xz https://download.qt.io/official_releases/qt/${QTVER%.*}/$QTVER/single/qt-everywhere-src-${QTVER}.tar.xz && \
+	curl -sSfL -o qt.tar.xz https://mirrors.ocf.berkeley.edu/qt/official_releases/qt/${QTVER%.*}/$QTVER/single/qt-everywhere-src-${QTVER}.tar.xz && \
 	tar -xf qt.tar.xz && \
 	cd  qt-everywhere-src-* && \
 	mkdir build && cd build && \
-	cmake ../ -G Ninja -DCMAKE_BUILD_TYPE=MinSizeRel -DCMAKE_C_COMPILER=$CLANG_BINARY -DCMAKE_CXX_COMPILER=$CLANGXX_BINARY -DFEATURE_ffmpeg=ON -DFEATURE_gstreamer=OFF -DFEATURE_fontconfig=ON -DFEATURE_system_freetype=ON -DFEATURE_system_xcb_xinput=ON -DFEATURE_openssl_linked=ON \
+	cmake ../ -G Ninja -DCMAKE_BUILD_TYPE=MinSizeRel -DCMAKE_C_COMPILER=$CLANG_BINARY -DCMAKE_CXX_COMPILER=$CLANGXX_BINARY -DFEATURE_ffmpeg=ON -DFEATURE_gstreamer=OFF -DFEATURE_fontconfig=ON -DFEATURE_system_freetype=ON -DFEATURE_system_xcb_xinput=ON -DFEATURE_openssl_linked=ON -DFEATURE_gds=OFF \
 	-DCMAKE_INSTALL_PREFIX=/usr && \
 	echo "Need to cleanup for latest GCC" && \
 	sed -i 's/std::uint32_t/uint32_t/' ../qt3d/src/3rdparty/assimp/src/code/AssetLib/FBX/FBXBinaryTokenizer.cpp && \
