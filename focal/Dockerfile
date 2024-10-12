@@ -48,7 +48,7 @@ RUN \
 	cmake --version
 
 # We gotta build our own version of Ninja as well
-ENV NINJAVER=1.11.1
+ENV NINJAVER=1.12.1
 RUN \
 	curl -sSfL -o ninja.tar.gz https://github.com/ninja-build/ninja/archive/v${NINJAVER}.tar.gz && \
 	tar -xf ninja.tar.gz && \
@@ -134,8 +134,7 @@ RUN \
 	rm ./*.tar.xz && \
 	rm -r ./ffmpeg-*
 
-ENV QTVER=6.7.3
-ENV QTVERMIN=67
+ENV QTVER=6.8.0
 RUN \
 	curl -sSfL -o qt.tar.xz https://mirrors.ocf.berkeley.edu/qt/official_releases/qt/${QTVER%.*}/$QTVER/single/qt-everywhere-src-${QTVER}.tar.xz && \
 	tar -xf qt.tar.xz && \
@@ -150,21 +149,6 @@ RUN \
 	cd ../../ && \
 	rm -r ./qt-everywhere-src-* && \
 	rm qt.tar.xz
-
-# We need to build a custom version of SDL2 as well
-ENV SDL2VER=2.30.1
-RUN \
-	curl -sSfL -o SDL2.tar.gz https://www.libsdl.org/release/SDL2-${SDL2VER}.tar.gz && \
-	tar -xf SDL2.tar.gz && \
-	cd SDL2* && \
-	mkdir build && cd build && \
-	cmake ../ -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=$CLANG_BINARY -DCMAKE_CXX_COMPILER=$CLANGXX_BINARY \
-	-DCMAKE_INSTALL_PREFIX=/usr -DSDL_DLOPEN=ON -DARTS=OFF -DESD=OFF -DNAS=OFF -DALSA=ON -DPULSEAUDIO_SHARED=ON -DRPATH=OFF -DCLOCK_GETTIME=ON && \
-	ninja && \
-	ninja install && \
-	cd ../.. && \
-	rm ./*.tar.gz && \
-	rm -r ./SDL2*
 
 ENV SHELLCHECKVER=0.10.0
 RUN \
