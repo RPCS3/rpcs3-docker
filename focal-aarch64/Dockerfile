@@ -107,7 +107,7 @@ RUN \
 	cd llvm-*/llvm && \
 	mkdir build && cd build && \
 	cmake .. -G Ninja -DCMAKE_C_COMPILER=$CLANG_BINARY -DCMAKE_CXX_COMPILER=$CLANGXX_BINARY -DCMAKE_INSTALL_PREFIX=/opt/llvm  \
-	-DLLVM_ENABLE_CXX1Y=ON -DLLVM_TARGETS_TO_BUILD="AArch64" -DCMAKE_BUILD_TYPE=MinSizeRel -DLLVM_USE_INTEL_JITEVENTS=ON -DLLVM_USE_PERF=ON \
+	-DLLVM_ENABLE_CXX1Y=ON -DLLVM_TARGETS_TO_BUILD="AArch64" -DCMAKE_BUILD_TYPE=MinSizeRel -DLLVM_USE_PERF=ON \
 	-DLLVM_BUILD_RUNTIME=OFF -DLLVM_BUILD_TOOLS=OFF -DLLVM_INCLUDE_DOCS=OFF -DLLVM_INCLUDE_EXAMPLES=OFF -DLLVM_INCLUDE_TESTS=OFF -DLLVM_INCLUDE_TOOLS=OFF \
 	-DLLVM_INCLUDE_UTILS=OFF -DLLVM_INCLUDE_BENCHMARKS=OFF -DWITH_POLLY=OFF -DLLVM_ENABLE_Z3_SOLVER=OFF && \
 	ninja && \
@@ -209,3 +209,18 @@ RUN \
 	cd .. && \
 	rm -r ./shellcheck* && \
 	shellcheck --version
+
+# We need to build a custom version of SDL2 as well
+ENV SDL2VER=2.30.8
+RUN \
+	curl -sSfL -o SDL2.tar.gz https://www.libsdl.org/release/SDL2-${SDL2VER}.tar.gz && \
+	tar -xf SDL2.tar.gz && \
+	cd SDL2* && \
+	mkdir build && cd build && \
+	cmake ../ -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=$CLANG_BINARY -DCMAKE_CXX_COMPILER=$CLANGXX_BINARY \
+	-DCMAKE_INSTALL_PREFIX=/usr -DSDL_DLOPEN=ON -DARTS=OFF -DESD=OFF -DNAS=OFF -DALSA=ON -DPULSEAUDIO_SHARED=ON -DRPATH=OFF -DCLOCK_GETTIME=ON && \
+	ninja && \
+	ninja install && \
+	cd ../.. && \
+	rm ./*.tar.gz && \
+	rm -r ./SDL2*
