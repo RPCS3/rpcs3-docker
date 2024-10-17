@@ -64,7 +64,11 @@ RUN \
                         libvpx-dev \
                         libx264-dev \
                         libxml2-dev \
-                        ocl-icd-opencl-dev
+                        ocl-icd-opencl-dev \
+                        libwayland-client0 \
+                        libwayland-server0 \
+                        libwayland-dev \
+                        libwayland-cursor0
 
 # For QT build we need some unknown X11/XCB deps. Just install everything by prefix
 RUN \
