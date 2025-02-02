@@ -18,7 +18,7 @@ RUN \
 	apt-get install -y curl libcurl4-openssl-dev software-properties-common apt-transport-https && \
 	curl -Lvs https://apt.llvm.org/llvm-snapshot.gpg.key | apt-key add - && \
 	add-apt-repository -y ppa:ubuntu-toolchain-r/test && \
-	add-apt-repository -y "deb http://apt.llvm.org/focal/ llvm-toolchain-focal-${LLVMVER} main" && \
+	add-apt-repository -y "deb http://apt.llvm.org/jammy/ llvm-toolchain-jammy-${LLVMVER} main" && \
 	apt-get update -y --fix-missing && \
 	\
 	apt-get install -y \
