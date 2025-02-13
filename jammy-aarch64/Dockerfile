@@ -33,6 +33,7 @@ RUN \
                         $GXX_BINARY \
                         $CLANG_BINARY \
                         $CLANGXX_BINARY \
+                        $LLD_BINARY \
                         \
                         libasound2-dev \
                         libpulse-dev \
