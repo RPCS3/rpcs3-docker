@@ -23,6 +23,7 @@ RUN \
         apt-get -y install \
                         build-essential \
                         git \
+                        ccache \
                         curl \
                         libfreetype6 \
                         xz-utils \
@@ -70,15 +71,13 @@ RUN \
                         libwayland-client0 \
                         libwayland-server0 \
                         libwayland-dev \
-                        libwayland-cursor0
-
-# For QT build we need some unknown X11/XCB deps. Just install everything by prefix
-RUN \
-        apt -y install \
-                libx11-* \
-                libxcb-* \
-                libxkb*
-
+                        libwayland-cursor0 \
+                        libx11-* \
+                        libxcb-* \
+                        libxkb* && \
+        apt-get clean autoclean && \
+        apt-get autoremove --yes && \
+        rm -rf /var/lib/apt
 RUN \
 	curl -sSfLO http://http.us.debian.org/debian/pool/main/g/glew/libglew2.2_2.2.0-4+b1_arm64.deb && \
 	curl -sSfLO http://http.us.debian.org/debian/pool/main/g/glew/libglew-dev_2.2.0-4+b1_arm64.deb && \
