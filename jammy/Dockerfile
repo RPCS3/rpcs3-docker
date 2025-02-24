@@ -29,6 +29,7 @@ RUN \
 	libssl-dev libfontconfig1-dev libv4l-dev yasm libgmp-dev libmp3lame-dev libopenjp2-7-dev libjack-dev \
 	libtheora-dev libwebp-dev libopus-dev libvorbis-dev libvpx-dev libx264-dev libxml2-dev ocl-icd-opencl-dev \
 	libwayland-dev libwayland-cursor0 libxkbcommon-x11-dev libwayland-client0 libwayland-server0 \
+	libpng-dev libjpeg-turbo8-dev libtiff-dev libwebp-dev \
 	desktop-file-utils dput gnupg pbuilder ubuntu-dev-tools apt-file patchelf && \
 	apt-get install --only-upgrade dpkg && \
 	apt-get clean autoclean && \
@@ -117,7 +118,7 @@ RUN \
 	rm ./*.tar.gz && \
 	rm -r ./nv-codec-headers-*
 
-ENV FFMPEGVER=6.1.1
+ENV FFMPEGVER=6.1.2
 RUN \
 	curl -sSfLO https://ffmpeg.org/releases/ffmpeg-${FFMPEGVER}.tar.xz && \
 	tar -xf ./ffmpeg-*.tar.xz && \
@@ -136,7 +137,7 @@ RUN \
 	rm ./*.tar.xz && \
 	rm -r ./ffmpeg-*
 
-ENV QTVER=6.8.1
+ENV QTVER=6.8.2
 RUN \
 	curl -sSfL -o qt.tar.xz https://mirrors.ocf.berkeley.edu/qt/official_releases/qt/${QTVER%.*}/$QTVER/single/qt-everywhere-src-${QTVER}.tar.xz && \
 	tar -xf qt.tar.xz && \
@@ -165,7 +166,7 @@ RUN \
 	shellcheck --version
 
 # We need to build a custom version of SDL2 as well
-ENV SDL2VER=2.30.11
+ENV SDL2VER=2.30.12
 RUN \
 	curl -sSfL -o SDL2.tar.gz https://www.libsdl.org/release/SDL2-${SDL2VER}.tar.gz && \
 	tar -xf SDL2.tar.gz && \
@@ -178,3 +179,19 @@ RUN \
 	cd ../.. && \
 	rm ./*.tar.gz && \
 	rm -r ./SDL2*
+
+ENV OPENCV_VER=4.11.0
+RUN \
+	curl -sSfL -o opencv.tar.gz https://github.com/opencv/opencv/archive/${OPENCV_VER}/opencv-${OPENCV_VER}.tar.gz && \
+	tar -xf opencv.tar.gz && \
+	cd opencv* && \
+	mkdir build && cd build && \
+	cmake ../ -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=$CLANG_BINARY -DCMAKE_CXX_COMPILER=$CLANGXX_BINARY -DCMAKE_CXX_STANDARD=17 \
+	-DCMAKE_INSTALL_PREFIX=/usr -DBUILD_TESTS=OFF -DWITH_XINE=OFF -DOPENCV_SKIP_PYTHON_LOADER=ON -DOPENCV_ENABLE_NONFREE=ON -DWITH_VULKAN=ON -DWITH_QT=ON \
+	-DBUILD_TESTS=OFF -DBUILD_PERF_TESTS=OFF -DBUILD_EXAMPLES=OFF \
+	-DCPU_BASELINE_REQUIRE=SSE2 && \
+	ninja && \
+	ninja install && \
+	cd ../.. && \
+	rm ./*.tar.gz && \
+	rm -r ./opencv*

@@ -75,10 +75,12 @@ RUN \
                         libwayland-cursor0 \
                         libx11-* \
                         libxcb-* \
-                        libxkb* && \
+                        libxkb* \
+                        libpng-dev libjpeg-turbo8-dev libtiff-dev libwebp-dev && \
         apt-get clean autoclean && \
         apt-get autoremove --yes && \
         rm -rf /var/lib/apt
+
 RUN \
 	curl -sSfLO http://http.us.debian.org/debian/pool/main/g/glew/libglew2.2_2.2.0-4+b1_arm64.deb && \
 	curl -sSfLO http://http.us.debian.org/debian/pool/main/g/glew/libglew-dev_2.2.0-4+b1_arm64.deb && \
@@ -161,7 +163,7 @@ RUN \
         rm ./*.tar.gz && \
         rm -r ./nv-codec-headers-*
 
-ENV FFMPEGVER=6.1.1
+ENV FFMPEGVER=6.1.2
 RUN \
         curl -sSfLO https://ffmpeg.org/releases/ffmpeg-${FFMPEGVER}.tar.xz && \
         tar -xf ./ffmpeg-*.tar.xz && \
@@ -180,7 +182,7 @@ RUN \
         rm ./*.tar.xz && \
         rm -r ./ffmpeg-*
         
-ENV QTVER=6.8.1
+ENV QTVER=6.8.2
 RUN \
         curl -sSfL -o qt.tar.xz https://download.qt.io/official_releases/qt/${QTVER%.*}/$QTVER/single/qt-everywhere-src-${QTVER}.tar.xz && \
         tar -xf qt.tar.xz && \
@@ -219,7 +221,7 @@ RUN \
 	shellcheck --version
 
 # We need to build a custom version of SDL2 as well
-ENV SDL2VER=2.30.11
+ENV SDL2VER=2.30.12
 RUN \
 	curl -sSfL -o SDL2.tar.gz https://www.libsdl.org/release/SDL2-${SDL2VER}.tar.gz && \
 	tar -xf SDL2.tar.gz && \
@@ -232,3 +234,18 @@ RUN \
 	cd ../.. && \
 	rm ./*.tar.gz && \
 	rm -r ./SDL2*
+
+ENV OPENCV_VER=4.11.0
+RUN \
+	curl -sSfL -o opencv.tar.gz https://github.com/opencv/opencv/archive/${OPENCV_VER}/opencv-${OPENCV_VER}.tar.gz && \
+	tar -xf opencv.tar.gz && \
+	cd opencv* && \
+	mkdir build && cd build && \
+	cmake ../ -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=$CLANG_BINARY -DCMAKE_CXX_COMPILER=$CLANGXX_BINARY -DCMAKE_CXX_STANDARD=17 \
+	-DCMAKE_INSTALL_PREFIX=/usr -DBUILD_TESTS=OFF -DWITH_XINE=OFF -DOPENCV_SKIP_PYTHON_LOADER=ON -DOPENCV_ENABLE_NONFREE=ON -DWITH_VULKAN=ON -DWITH_QT=ON \
+	-DBUILD_TESTS=OFF -DBUILD_PERF_TESTS=OFF -DBUILD_EXAMPLES=OFF && \
+	ninja && \
+	ninja install && \
+	cd ../.. && \
+	rm ./*.tar.gz && \
+	rm -r ./opencv*
