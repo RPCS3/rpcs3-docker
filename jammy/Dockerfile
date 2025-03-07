@@ -165,12 +165,12 @@ RUN \
 	rm -r ./shellcheck* && \
 	shellcheck --version
 
-# We need to build a custom version of SDL2 as well
-ENV SDL2VER=2.30.12
+# We need to build a custom version of SDL3 as well
+ENV SDLVER=3.2.8
 RUN \
-	curl -sSfL -o SDL2.tar.gz https://www.libsdl.org/release/SDL2-${SDL2VER}.tar.gz && \
-	tar -xf SDL2.tar.gz && \
-	cd SDL2* && \
+	curl -sSfL -o SDL.tar.gz https://github.com/libsdl-org/SDL/releases/download/release-${SDLVER}/SDL3-${SDLVER}.tar.gz && \
+	tar -xf SDL.tar.gz && \
+	cd SDL3* && \
 	mkdir build && cd build && \
 	cmake ../ -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=$CLANG_BINARY -DCMAKE_CXX_COMPILER=$CLANGXX_BINARY \
 	-DCMAKE_INSTALL_PREFIX=/usr -DSDL_DLOPEN=ON -DARTS=OFF -DESD=OFF -DNAS=OFF -DALSA=ON -DPULSEAUDIO_SHARED=ON -DRPATH=OFF -DCLOCK_GETTIME=ON && \
@@ -178,7 +178,7 @@ RUN \
 	ninja install && \
 	cd ../.. && \
 	rm ./*.tar.gz && \
-	rm -r ./SDL2*
+	rm -r ./SDL*
 
 ENV OPENCV_VER=4.11.0
 RUN \
