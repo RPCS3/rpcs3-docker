@@ -1,7 +1,7 @@
 FROM ubuntu:22.04
 LABEL maintainer="hcorion"
 
-ENV LLVMVER=19
+ENV LLVMVER=20
 
 ENV CLANG_BINARY=clang-${LLVMVER}
 ENV CLANGXX_BINARY=clang++-${LLVMVER}
@@ -137,7 +137,7 @@ RUN \
 	rm ./*.tar.xz && \
 	rm -r ./ffmpeg-*
 
-ENV QTVER=6.8.2
+ENV QTVER=6.8.3
 RUN \
 	curl -sSfL -o qt.tar.xz https://mirrors.ocf.berkeley.edu/qt/official_releases/qt/${QTVER%.*}/$QTVER/single/qt-everywhere-src-${QTVER}.tar.xz && \
 	tar -xf qt.tar.xz && \
