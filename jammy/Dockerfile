@@ -43,7 +43,7 @@ RUN \
 	rm ./*.deb
 
 # Setup newer CMake
-ENV CMAKEVER=3.26.3
+ENV CMAKEVER=3.28.6
 RUN \
 	curl -sSfLO https://github.com/Kitware/CMake/releases/download/v${CMAKEVER}/cmake-${CMAKEVER}-linux-x86_64.sh && \
 	sh cmake-${CMAKEVER}-linux-x86_64.sh --prefix=/usr --skip-license && \
