@@ -163,7 +163,7 @@ RUN \
         rm ./*.tar.gz && \
         rm -r ./nv-codec-headers-*
 
-ENV FFMPEGVER=6.1.2
+ENV FFMPEGVER=7.1.1
 RUN \
         curl -sSfLO https://ffmpeg.org/releases/ffmpeg-${FFMPEGVER}.tar.xz && \
         tar -xf ./ffmpeg-*.tar.xz && \
@@ -175,8 +175,8 @@ RUN \
         --enable-libopenjpeg --enable-libopus --enable-libpulse \
         --enable-libtheora --enable-libv4l2 \
         --enable-libvorbis --enable-libvpx --enable-libwebp --enable-libx264 --enable-libxcb --enable-libxml2 \
-        --enable-nvdec --enable-nvenc --enable-ffnvcodec --enable-opencl --enable-opengl --enable-shared --enable-version3 --enable-vulkan && \
-        make && \
+        --enable-nvdec --enable-nvenc --enable-ffnvcodec --enable-opencl --enable-opengl --enable-shared --enable-version3 && \
+        make -j$(nproc) && \
         PREFIX=/usr make install && \
         cd ../.. && \
         rm ./*.tar.xz && \
