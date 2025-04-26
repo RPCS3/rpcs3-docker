@@ -56,6 +56,8 @@ RUN \
                         libglu1-mesa-dev \
                         libglu-dev \
                         libv4l-dev \
+                        libdrm-dev \
+                        libdbus-1-dev \
                         yasm \
                         libgmp-dev \
                         libmp3lame-dev \
@@ -76,7 +78,7 @@ RUN \
                         libx11-* \
                         libxcb-* \
                         libxkb* \
-                        libpng-dev libjpeg-turbo8-dev libtiff-dev libwebp-dev && \
+                        libpng-dev libjpeg-turbo8-dev libtiff-dev libwebp-dev libgtest-dev && \
         apt-get clean autoclean && \
         apt-get autoremove --yes && \
         rm -rf /var/lib/apt
@@ -152,7 +154,7 @@ RUN \
 	rm ./*.tar.gz && \
 	rm -r ./Vulkan-Loader*
 
-ENV FFMPEG_NV_CODEC_VER=12.1.14.0
+ENV FFMPEG_NV_CODEC_VER=13.0.19.0
 RUN \
         curl -sSfLO https://github.com/FFmpeg/nv-codec-headers/releases/download/n${FFMPEG_NV_CODEC_VER}/nv-codec-headers-${FFMPEG_NV_CODEC_VER}.tar.gz && \
         tar -xf ./nv-codec-headers-*.tar.gz && \
@@ -182,7 +184,7 @@ RUN \
         rm ./*.tar.xz && \
         rm -r ./ffmpeg-*
         
-ENV QTVER=6.8.3
+ENV QTVER=6.9.0
 RUN \
         curl -sSfL -o qt.tar.xz https://download.qt.io/official_releases/qt/${QTVER%.*}/$QTVER/single/qt-everywhere-src-${QTVER}.tar.xz && \
         tar -xf qt.tar.xz && \
@@ -199,6 +201,14 @@ RUN \
                         -DFEATURE_system_xcb_xinput=ON \
                         -DFEATURE_openssl_linked=ON \
                         -DFEATURE_gds=OFF \
+                        -DBUILD_qtwebview=OFF \
+                        -DBUILD_qtwebchannel=OFF \
+                        -DBUILD_qtwebengine=OFF \
+                        -DBUILD_qtquick3d=OFF \
+                        -DBUILD_qtgraphs=OFF \
+                        -DBUILD_qtquick3dphysics=OFF \
+                        -DBUILD_qtvirtualkeyboard=OFF \
+                        -DBUILD_qt3d=OFF \
                         -DCMAKE_INSTALL_PREFIX=/usr && \
         echo "Need to cleanup for latest GCC/Clang" && \
 	sed -i 's/<< line.v0//' ../qtquick3d/src/3rdparty/embree/kernels/geometry/pointi.h && \
@@ -221,7 +231,7 @@ RUN \
 	shellcheck --version
 
 # We need to build a custom version of SDL3 as well
-ENV SDLVER=3.2.8
+ENV SDLVER=3.2.10
 RUN \
 	curl -sSfL -o SDL.tar.gz https://github.com/libsdl-org/SDL/releases/download/release-${SDLVER}/SDL3-${SDLVER}.tar.gz && \
 	tar -xf SDL.tar.gz && \
@@ -241,7 +251,7 @@ RUN \
 	tar -xf opencv.tar.gz && \
 	cd opencv* && \
 	mkdir build && cd build && \
-	cmake ../ -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=$CLANG_BINARY -DCMAKE_CXX_COMPILER=$CLANGXX_BINARY -DCMAKE_CXX_STANDARD=17 \
+	cmake ../ -G Ninja -DCMAKE_BUILD_TYPE=MinSizeRel -DCMAKE_C_COMPILER=$CLANG_BINARY -DCMAKE_CXX_COMPILER=$CLANGXX_BINARY -DCMAKE_CXX_STANDARD=17 \
 	-DCMAKE_INSTALL_PREFIX=/usr -DBUILD_TESTS=OFF -DWITH_XINE=OFF -DOPENCV_SKIP_PYTHON_LOADER=ON -DOPENCV_ENABLE_NONFREE=ON -DWITH_VULKAN=ON -DWITH_QT=ON \
 	-DBUILD_TESTS=OFF -DBUILD_PERF_TESTS=OFF -DBUILD_EXAMPLES=OFF && \
 	ninja && \
