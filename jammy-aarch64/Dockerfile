@@ -78,7 +78,7 @@ RUN \
                         libx11-* \
                         libxcb-* \
                         libxkb* \
-                        libpng-dev libjpeg-turbo8-dev libtiff-dev libwebp-dev libgtest-dev && \
+                        libpng-dev libjpeg-turbo8-dev libtiff-dev libwebp-dev libgtest-dev python3 python3-venv python3-pip && \
         apt-get clean autoclean && \
         apt-get autoremove --yes && \
         rm -rf /var/lib/apt
@@ -259,3 +259,20 @@ RUN \
 	cd ../.. && \
 	rm ./*.tar.gz && \
 	rm -r ./opencv*
+
+
+# Gamemode package is outdated in jammy repo, we need to build own
+# Gamemode uses Meson, not CMake for building
+# Based on build instructions for Ubuntu 22 on repo page
+ENV GAMEMODE_VER=1.8.2
+RUN \
+	python3 -m venv .venv && \
+	source .venv/bin/activate && \
+	pip install meson && \
+	git clone https://github.com/FeralInteractive/gamemode.git && \
+	cd gamemode* && \
+	git checkout ${GAMEMODE_VER} && \
+	./bootstrap.sh && \
+	deactivate && \
+	rm -rf .venv && \
+	rm -r ./gamemode* 
