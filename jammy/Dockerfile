@@ -30,7 +30,7 @@ RUN \
 	libtheora-dev libwebp-dev libopus-dev libvorbis-dev libvpx-dev libx264-dev libxml2-dev ocl-icd-opencl-dev \
 	libwayland-dev libwayland-cursor0 libxkbcommon-x11-dev libwayland-client0 libwayland-server0 \
 	libpng-dev libjpeg-turbo8-dev libtiff-dev libwebp-dev \
-	desktop-file-utils dput gnupg pbuilder ubuntu-dev-tools apt-file patchelf libgtest-dev python3 python3-venv python3-pip && \
+	desktop-file-utils dput gnupg pbuilder ubuntu-dev-tools apt-file patchelf libgtest-dev python3 python3-venv python3-pip libsystemd-dev && \
 	apt-get install --only-upgrade dpkg && \
 	apt-get clean autoclean && \
 	apt-get autoremove --yes && \
@@ -200,14 +200,30 @@ RUN \
 # Gamemode uses Meson, not CMake for building
 # Based on build instructions for Ubuntu 22 on repo page
 ENV GAMEMODE_VER=1.8.2
+RUN useradd -m rpcs3-dock && \
+    echo "rpcs3-dock ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 RUN \
-	python3 -m venv .venv && \
-	source .venv/bin/activate && \
-	pip install meson && \
-	git clone https://github.com/FeralInteractive/gamemode.git && \
-	cd gamemode* && \
-	git checkout ${GAMEMODE_VER} && \
+	python3 -m venv /home/rpcs3-dock/.venv && \
+    chown -R rpcs3-dock:rpcs3-dock /home/rpcs3-dock/.venv && \
+    /home/rpcs3-dock/.venv/bin/pip install meson && \
+	curl -L https://github.com/FeralInteractive/gamemode/archive/refs/tags/${GAMEMODE_VER}.tar.gz -o gamemode.tar.gz && \
+	tar -xzf gamemode.tar.gz && \
+	rm gamemode.tar.gz && \
+	mv gamemode-${GAMEMODE_VER} gamemode && \
+	chown -R rpcs3-dock:rpcs3-dock /gamemode
+
+# Script needs to be run in user mode so we do this here before going back to root for cleanup
+USER rpcs3-dock
+WORKDIR /gamemode
+ENV CI=true
+RUN sudo -k && \
+	. /home/rpcs3-dock/.venv/bin/activate && \
 	./bootstrap.sh && \
-	deactivate && \
-	rm -rf .venv && \
-	rm -r ./gamemode* 
+	deactivate
+
+USER root
+RUN \
+	userdel -r rpcs3-dock 2>/dev/null || true && \
+	rm -rf /home/rpcs3-dock/.venv && \
+	rm -r  /gamemode
+RUN ! getent passwd rpcs3-dock
