@@ -137,7 +137,7 @@ RUN \
 	rm ./*.tar.xz && \
 	rm -r ./ffmpeg-*
 
-ENV QTVER=6.9.0
+ENV QTVER=6.9.1
 RUN \
 	curl -sSfL -o qt.tar.xz https://mirrors.ocf.berkeley.edu/qt/official_releases/qt/${QTVER%.*}/$QTVER/single/qt-everywhere-src-${QTVER}.tar.xz && \
 	tar -xf qt.tar.xz && \
@@ -155,7 +155,7 @@ RUN \
 	rm -r ./qt-everywhere-src-* && \
 	rm qt.tar.xz
 
-ENV SHELLCHECKVER=0.10.0
+ENV SHELLCHECKVER=0.11.0
 RUN \
 	curl -sSfL -o shellcheck.tar.gz https://github.com/koalaman/shellcheck/releases/download/v${SHELLCHECKVER}/shellcheck-v${SHELLCHECKVER}.linux.x86_64.tar.xz && \
 	tar -xf shellcheck.tar.gz && \
@@ -166,7 +166,7 @@ RUN \
 	shellcheck --version
 
 # We need to build a custom version of SDL3 as well
-ENV SDLVER=3.2.10
+ENV SDLVER=3.2.20
 RUN \
 	curl -sSfL -o SDL.tar.gz https://github.com/libsdl-org/SDL/releases/download/release-${SDLVER}/SDL3-${SDLVER}.tar.gz && \
 	tar -xf SDL.tar.gz && \
