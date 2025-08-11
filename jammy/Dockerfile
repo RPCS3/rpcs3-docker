@@ -222,6 +222,7 @@ RUN sudo -k && \
 	deactivate
 
 USER root
+WORKDIR /
 RUN \
 	userdel -r rpcs3-dock 2>/dev/null || true && \
 	rm -rf /home/rpcs3-dock/.venv && \
