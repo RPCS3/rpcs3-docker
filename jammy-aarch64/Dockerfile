@@ -29,6 +29,7 @@ RUN \
                         xz-utils \
                         openssl \
                         file \
+                        sudo \
                         \
                         $GCC_BINARY \
                         $GXX_BINARY \
