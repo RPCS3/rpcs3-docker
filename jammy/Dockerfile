@@ -180,7 +180,7 @@ RUN \
 	rm ./*.tar.gz && \
 	rm -r ./SDL*
 
-ENV OPENCV_VER=4.11.0
+ENV OPENCV_VER=4.12.0
 RUN \
 	curl -sSfL -o opencv.tar.gz https://github.com/opencv/opencv/archive/${OPENCV_VER}/opencv-${OPENCV_VER}.tar.gz && \
 	tar -xf opencv.tar.gz && \
