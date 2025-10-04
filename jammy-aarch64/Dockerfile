@@ -79,7 +79,8 @@ RUN \
                         libx11-* \
                         libxcb-* \
                         libxkb* \
-                        libpng-dev libjpeg-turbo8-dev libtiff-dev libwebp-dev libgtest-dev python3 python3-venv python3-pip libsystemd-dev && \
+                        libpng-dev libjpeg-turbo8-dev libtiff-dev libwebp-dev libgtest-dev python3 python3-venv python3-pip libsystemd-dev \ 
+			libgmock-dev && \
         apt-get clean autoclean && \
         apt-get autoremove --yes && \
         rm -rf /var/lib/apt
