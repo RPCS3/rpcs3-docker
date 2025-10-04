@@ -1,7 +1,7 @@
 FROM arm64v8/ubuntu:22.04
 LABEL maintainer="hcorion/kd-11"
 
-ENV LLVMVER=20
+ENV LLVMVER=21
 
 ENV CLANG_BINARY=clang-${LLVMVER}
 ENV CLANGXX_BINARY=clang++-${LLVMVER}
