@@ -29,7 +29,7 @@ RUN \
 	libssl-dev libfontconfig1-dev libv4l-dev yasm libgmp-dev libmp3lame-dev libopenjp2-7-dev libjack-dev \
 	libtheora-dev libwebp-dev libopus-dev libvorbis-dev libvpx-dev libx264-dev libxml2-dev ocl-icd-opencl-dev \
 	libwayland-dev libwayland-cursor0 libxkbcommon-x11-dev libwayland-client0 libwayland-server0 \
-	libpng-dev libjpeg-turbo8-dev libtiff-dev libwebp-dev \
+	libpng-dev libjpeg-turbo8-dev libtiff-dev libwebp-dev libgmock-dev \
 	desktop-file-utils dput gnupg pbuilder ubuntu-dev-tools apt-file patchelf libgtest-dev python3 python3-venv python3-pip libsystemd-dev && \
 	apt-get install --only-upgrade dpkg && \
 	apt-get clean autoclean && \
