@@ -1,7 +1,7 @@
 FROM arm64v8/ubuntu:22.04
 LABEL maintainer="hcorion/kd-11"
 
-ENV LLVMVER=20
+ENV LLVMVER=21
 
 ENV CLANG_BINARY=clang-${LLVMVER}
 ENV CLANGXX_BINARY=clang++-${LLVMVER}
@@ -79,7 +79,8 @@ RUN \
                         libx11-* \
                         libxcb-* \
                         libxkb* \
-                        libpng-dev libjpeg-turbo8-dev libtiff-dev libwebp-dev libgtest-dev python3 python3-venv python3-pip libsystemd-dev && \
+                        libpng-dev libjpeg-turbo8-dev libtiff-dev libwebp-dev libgtest-dev python3 python3-venv python3-pip libsystemd-dev \ 
+			libgmock-dev && \
         apt-get clean autoclean && \
         apt-get autoremove --yes && \
         rm -rf /var/lib/apt
@@ -99,7 +100,7 @@ RUN \
 	cmake --version
 
 # We gotta build our own version of Ninja as well
-ENV NINJAVER=1.12.1
+ENV NINJAVER=1.13.1
 RUN \
 	curl -sSfL -o ninja.tar.gz https://github.com/ninja-build/ninja/archive/v${NINJAVER}.tar.gz && \
 	tar -xf ninja.tar.gz && \
@@ -185,7 +186,7 @@ RUN \
         rm ./*.tar.xz && \
         rm -r ./ffmpeg-*
         
-ENV QTVER=6.9.1
+ENV QTVER=6.9.3
 RUN \
         curl -sSfL -o qt.tar.xz https://download.qt.io/official_releases/qt/${QTVER%.*}/$QTVER/single/qt-everywhere-src-${QTVER}.tar.xz && \
         tar -xf qt.tar.xz && \
@@ -232,7 +233,7 @@ RUN \
 	shellcheck --version
 
 # We need to build a custom version of SDL3 as well
-ENV SDLVER=3.2.20
+ENV SDLVER=3.2.22
 RUN \
 	curl -sSfL -o SDL.tar.gz https://github.com/libsdl-org/SDL/releases/download/release-${SDLVER}/SDL3-${SDLVER}.tar.gz && \
 	tar -xf SDL.tar.gz && \
@@ -246,7 +247,7 @@ RUN \
 	rm ./*.tar.gz && \
 	rm -r ./SDL*
 
-ENV OPENCV_VER=4.11.0
+ENV OPENCV_VER=4.12.0
 RUN \
 	curl -sSfL -o opencv.tar.gz https://github.com/opencv/opencv/archive/${OPENCV_VER}/opencv-${OPENCV_VER}.tar.gz && \
 	tar -xf opencv.tar.gz && \
