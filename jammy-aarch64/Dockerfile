@@ -261,37 +261,3 @@ RUN \
 	cd ../.. && \
 	rm ./*.tar.gz && \
 	rm -r ./opencv*
-
-# Gamemode package is outdated in jammy repo, we need to build own
-# Gamemode uses Meson, not CMake for building
-# Based on build instructions for Ubuntu 22 on repo page
-ENV GAMEMODE_VER=1.8.2
-RUN useradd -m rpcs3-dock && \
-    echo "rpcs3-dock ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
-RUN \
-	python3 -m venv /home/rpcs3-dock/.venv && \
-    chown -R rpcs3-dock:rpcs3-dock /home/rpcs3-dock/.venv && \
-    /home/rpcs3-dock/.venv/bin/pip install meson && \
-	curl -L https://github.com/FeralInteractive/gamemode/archive/refs/tags/${GAMEMODE_VER}.tar.gz -o gamemode.tar.gz && \
-	tar -xzf gamemode.tar.gz && \
-	rm gamemode.tar.gz && \
-	mv gamemode-${GAMEMODE_VER} gamemode && \
-	chown -R rpcs3-dock:rpcs3-dock /gamemode
-
-# Script needs to be run in user mode so we do this here before going back to root for cleanup
-USER rpcs3-dock
-WORKDIR /gamemode
-ENV CI=true
-RUN sudo -k && \
-	. /home/rpcs3-dock/.venv/bin/activate && \
-	./bootstrap.sh && \
-	deactivate
-
-USER root
-WORKDIR /
-RUN \
-	userdel -r rpcs3-dock 2>/dev/null || true && \
-	rm -rf /home/rpcs3-dock/.venv && \
-	rm -r  /gamemode
-RUN ! getent passwd rpcs3-dock
-
