@@ -80,6 +80,13 @@ RUN \
                         libx11-* \
                         libxcb-* \
                         libxkb* \
+                        libxcursor-dev \
+                        libxext-dev \
+                        libxfixes-dev \
+                        libxi-dev \
+                        libxss-dev \
+                        libxtst-dev \
+                        liburing-dev \
                         libpng-dev libjpeg-turbo8-dev libtiff-dev libwebp-dev libgtest-dev python3 python3-venv python3-pip libsystemd-dev \ 
 			libgmock-dev && \
         apt-get clean autoclean && \
