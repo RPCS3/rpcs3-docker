@@ -40,6 +40,7 @@ RUN \
                         libasound2-dev \
                         libpulse-dev \
                         libopenal-dev \
+                        libpipewire-0.3-dev \
                         libfreetype6-dev \
                         libfontconfig-dev \
                         zlib1g-dev \

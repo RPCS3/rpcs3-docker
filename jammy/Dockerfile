@@ -24,7 +24,7 @@ RUN \
 	apt-get install -y \
 	$GCC_BINARY $GXX_BINARY \
 	build-essential binutils git ccache bc $CLANG_BINARY $CLANGXX_BINARY $LLD_BINARY \
-	libasound2-dev libopenal-dev freeglut3-dev libudev-dev libevdev-dev libpulse-dev libxrandr-dev libglvnd-dev \
+	libasound2-dev libopenal-dev libpipewire-0.3-dev freeglut3-dev libudev-dev libevdev-dev libpulse-dev libxrandr-dev libglvnd-dev \
 	'^libxcb.*-dev' libxcb-cursor0 libx11-xcb-dev libxcb-util-dev libdrm-dev libdbus-1-dev \
 	libssl-dev libfontconfig1-dev libv4l-dev yasm libgmp-dev libmp3lame-dev libopenjp2-7-dev libjack-dev \
 	libtheora-dev libwebp-dev libopus-dev libvorbis-dev libvpx-dev libx264-dev libxml2-dev ocl-icd-opencl-dev \
