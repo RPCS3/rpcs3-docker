@@ -187,7 +187,7 @@ RUN \
         rm ./*.tar.xz && \
         rm -r ./ffmpeg-*
         
-ENV QTVER=6.10.0
+ENV QTVER=6.10.2
 RUN \
         curl -sSfL -o qt.tar.xz https://download.qt.io/official_releases/qt/${QTVER%.*}/$QTVER/single/qt-everywhere-src-${QTVER}.tar.xz && \
         tar -xf qt.tar.xz && \
