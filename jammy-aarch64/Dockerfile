@@ -168,7 +168,7 @@ RUN \
         rm ./*.tar.gz && \
         rm -r ./nv-codec-headers-*
 
-ENV FFMPEGVER=7.1.1
+ENV FFMPEGVER=7.1.3
 RUN \
         curl -sSfLO https://ffmpeg.org/releases/ffmpeg-${FFMPEGVER}.tar.xz && \
         tar -xf ./ffmpeg-*.tar.xz && \
