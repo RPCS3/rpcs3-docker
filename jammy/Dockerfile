@@ -24,7 +24,7 @@ RUN \
 	apt-get install -y \
 	$GCC_BINARY $GXX_BINARY \
 	build-essential binutils git ccache bc $CLANG_BINARY $CLANGXX_BINARY $LLD_BINARY \
-	libasound2-dev libopenal-dev freeglut3-dev libudev-dev libevdev-dev libpulse-dev libxrandr-dev libglvnd-dev \
+	libasound2-dev libopenal-dev libpipewire-0.3-dev freeglut3-dev libudev-dev libevdev-dev libpulse-dev libxrandr-dev libglvnd-dev \
 	'^libxcb.*-dev' libxcb-cursor0 libx11-xcb-dev libxcb-util-dev libdrm-dev libdbus-1-dev \
 	libssl-dev libfontconfig1-dev libv4l-dev yasm libgmp-dev libmp3lame-dev libopenjp2-7-dev libjack-dev \
 	libtheora-dev libwebp-dev libopus-dev libvorbis-dev libvpx-dev libx264-dev libxml2-dev ocl-icd-opencl-dev \
@@ -51,7 +51,7 @@ RUN \
 	cmake --version
 
 # We gotta build our own version of Ninja as well
-ENV NINJAVER=1.13.1
+ENV NINJAVER=1.13.2
 RUN \
 	curl -sSfL -o ninja.tar.gz https://github.com/ninja-build/ninja/archive/v${NINJAVER}.tar.gz && \
 	tar -xf ninja.tar.gz && \
@@ -118,7 +118,7 @@ RUN \
 	rm ./*.tar.gz && \
 	rm -r ./nv-codec-headers-*
 
-ENV FFMPEGVER=7.1.1
+ENV FFMPEGVER=7.1.3
 RUN \
 	curl -sSfLO https://ffmpeg.org/releases/ffmpeg-${FFMPEGVER}.tar.xz && \
 	tar -xf ./ffmpeg-*.tar.xz && \
@@ -137,7 +137,7 @@ RUN \
 	rm ./*.tar.xz && \
 	rm -r ./ffmpeg-*
 
-ENV QTVER=6.10.0
+ENV QTVER=6.10.2
 RUN \
 	curl -sSfL -o qt.tar.xz https://mirrors.ocf.berkeley.edu/qt/official_releases/qt/${QTVER%.*}/$QTVER/single/qt-everywhere-src-${QTVER}.tar.xz && \
 	tar -xf qt.tar.xz && \
@@ -166,7 +166,7 @@ RUN \
 	shellcheck --version
 
 # We need to build a custom version of SDL3 as well
-ENV SDLVER=3.2.24
+ENV SDLVER=3.4.0
 RUN \
 	curl -sSfL -o SDL.tar.gz https://github.com/libsdl-org/SDL/releases/download/release-${SDLVER}/SDL3-${SDLVER}.tar.gz && \
 	tar -xf SDL.tar.gz && \

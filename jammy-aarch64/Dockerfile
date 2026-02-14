@@ -40,6 +40,7 @@ RUN \
                         libasound2-dev \
                         libpulse-dev \
                         libopenal-dev \
+                        libpipewire-0.3-dev \
                         libfreetype6-dev \
                         libfontconfig-dev \
                         zlib1g-dev \
@@ -100,7 +101,7 @@ RUN \
 	cmake --version
 
 # We gotta build our own version of Ninja as well
-ENV NINJAVER=1.13.1
+ENV NINJAVER=1.13.2
 RUN \
 	curl -sSfL -o ninja.tar.gz https://github.com/ninja-build/ninja/archive/v${NINJAVER}.tar.gz && \
 	tar -xf ninja.tar.gz && \
@@ -167,7 +168,7 @@ RUN \
         rm ./*.tar.gz && \
         rm -r ./nv-codec-headers-*
 
-ENV FFMPEGVER=7.1.1
+ENV FFMPEGVER=7.1.3
 RUN \
         curl -sSfLO https://ffmpeg.org/releases/ffmpeg-${FFMPEGVER}.tar.xz && \
         tar -xf ./ffmpeg-*.tar.xz && \
@@ -186,7 +187,7 @@ RUN \
         rm ./*.tar.xz && \
         rm -r ./ffmpeg-*
         
-ENV QTVER=6.10.0
+ENV QTVER=6.10.2
 RUN \
         curl -sSfL -o qt.tar.xz https://download.qt.io/official_releases/qt/${QTVER%.*}/$QTVER/single/qt-everywhere-src-${QTVER}.tar.xz && \
         tar -xf qt.tar.xz && \
@@ -233,7 +234,7 @@ RUN \
 	shellcheck --version
 
 # We need to build a custom version of SDL3 as well
-ENV SDLVER=3.2.24
+ENV SDLVER=3.4.0
 RUN \
 	curl -sSfL -o SDL.tar.gz https://github.com/libsdl-org/SDL/releases/download/release-${SDLVER}/SDL3-${SDLVER}.tar.gz && \
 	tar -xf SDL.tar.gz && \
