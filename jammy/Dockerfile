@@ -24,14 +24,14 @@ RUN \
 	apt-get install -y \
 	$GCC_BINARY $GXX_BINARY \
 	build-essential binutils git ccache bc $CLANG_BINARY $CLANGXX_BINARY $LLD_BINARY \
-	libasound2-dev libopenal-dev libpipewire-0.3-dev freeglut3-dev libudev-dev libevdev-dev libpulse-dev libxrandr-dev libglvnd-dev \
+	libasound2-dev freeglut3-dev libudev-dev libevdev-dev libpulse-dev libxrandr-dev libglvnd-dev \
 	'^libxcb.*-dev' libxcb-cursor0 libxcb-xinput-dev libxcursor-dev libx11-xcb-dev libxcb-util-dev libdrm-dev libdbus-1-dev \
 	libsndio-dev libxext-dev libxfixes-dev libxi-dev libxss-dev libxtst-dev \
 	libssl-dev libfontconfig1-dev libv4l-dev yasm libgmp-dev libmp3lame-dev libopenjp2-7-dev libjack-dev liburing-dev \
 	libtheora-dev libwebp-dev libopus-dev libvorbis-dev libvpx-dev libx264-dev libxml2-dev ocl-icd-opencl-dev \
 	libwayland-dev libwayland-cursor0 libxkbcommon-x11-dev libwayland-client0 libwayland-server0 \
 	libpng-dev libjpeg-turbo8-dev libtiff-dev libwebp-dev libgmock-dev \
-	desktop-file-utils dput gnupg pbuilder ubuntu-dev-tools apt-file patchelf libgtest-dev python3 python3-venv python3-pip libsystemd-dev && \
+	desktop-file-utils dput gnupg pbuilder ubuntu-dev-tools apt-file patchelf libgtest-dev python3 python3-venv python3-pip libsystemd-dev meson && \
 	apt-get install --only-upgrade dpkg && \
 	apt-get clean autoclean && \
 	apt-get autoremove --yes && \
@@ -64,13 +64,43 @@ RUN \
 	rm -r ./ninja-* && \
 	rm ./*.tar.gz
 
+ENV PIPEWIRE_VER=1.6.0
+RUN \
+	curl -sSfLO https://gitlab.freedesktop.org/pipewire/pipewire/-/archive/${PIPEWIRE_VER}/pipewire-${PIPEWIRE_VER}.tar.gz && \
+	tar -xf pipewire-*.tar.gz && \
+	cd pipewire-* && \
+	meson setup build \
+		-Dprefix=/usr \
+		-Dbuildtype=release \
+		-Dbackend=ninja \
+		-D session-managers=[] && \
+	meson compile -C build && \
+	meson install -C build && \
+	cd ../.. && \
+	rm ./*.tar.gz && \
+	rm -r pipewire-*
+
+
+ENV OPENAL_VER=1.25.1
+RUN \
+	curl -sSfL -o openal.tar.gz https://github.com/kcat/openal-soft/archive/refs/tags/${OPENAL_VER}.tar.gz && \
+	tar -xf openal.tar.gz && \
+	cd openal-* && \
+	cmake -B build -G Ninja -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_INSTALL_LIBDIR=lib -DCMAKE_BUILD_TYPE=Release \
+		-DCMAKE_C_COMPILER=$CLANG_BINARY -DCMAKE_CXX_COMPILER=$CLANGXX_BINARY && \
+	cmake --build build && \
+  	cmake --install build && \
+	cd .. && \
+	rm ./*.tar.gz && \
+	rm -r openal-*
+
 ENV STATIC_LLVM_VER=19.1.7
 RUN \
 	curl -sSfLO https://github.com/llvm/llvm-project/releases/download/llvmorg-${STATIC_LLVM_VER}/llvm-project-${STATIC_LLVM_VER}.src.tar.xz && \
 	tar -xf llvm-*.tar.xz && \
 	cd llvm-*/llvm && \
 	mkdir build && cd build && \
-	CXXFLAGS="-msse -msse2" cmake .. -G Ninja -DCMAKE_C_COMPILER=$CLANG_BINARY -DCMAKE_CXX_COMPILER=$CLANGXX_BINARY -DCMAKE_INSTALL_PREFIX=/opt/llvm  \
+	cmake .. -G Ninja -DCMAKE_C_COMPILER=$CLANG_BINARY -DCMAKE_CXX_COMPILER=$CLANGXX_BINARY -DCMAKE_INSTALL_PREFIX=/opt/llvm  \
 	-DLLVM_ENABLE_CXX1Y=ON -DLLVM_TARGETS_TO_BUILD="X86" -DCMAKE_BUILD_TYPE=Release -DLLVM_USE_INTEL_JITEVENTS=ON -DLLVM_USE_PERF=ON \
 	-DLLVM_BUILD_RUNTIME=OFF -DLLVM_BUILD_TOOLS=OFF -DLLVM_INCLUDE_DOCS=OFF -DLLVM_INCLUDE_EXAMPLES=OFF -DLLVM_INCLUDE_TESTS=OFF -DLLVM_INCLUDE_TOOLS=OFF \
 	-DLLVM_INCLUDE_UTILS=OFF -DLLVM_INCLUDE_BENCHMARKS=OFF -DWITH_POLLY=OFF -DLLVM_ENABLE_Z3_SOLVER=OFF && \
@@ -124,7 +154,7 @@ RUN \
 	curl -sSfLO https://ffmpeg.org/releases/ffmpeg-${FFMPEGVER}.tar.xz && \
 	tar -xf ./ffmpeg-*.tar.xz && \
 	cd ffmpeg-* && \
-	CFLAGS=-Os CXXFLAGS=-Os ./configure \
+	CFLAGS="${CFLAGS} -Os" CXXFLAGS="${CXXFLAGS} -Os" ./configure \
 	--prefix=/usr --disable-debug --disable-static --disable-stripping --enable-fontconfig --enable-gmp \
 	--enable-gpl \
 	--enable-libfreetype --enable-libjack --enable-libmp3lame \

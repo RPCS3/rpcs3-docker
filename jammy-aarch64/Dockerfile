@@ -39,8 +39,6 @@ RUN \
                         \
                         libasound2-dev \
                         libpulse-dev \
-                        libopenal-dev \
-                        libpipewire-0.3-dev \
                         libfreetype6-dev \
                         libfontconfig-dev \
                         zlib1g-dev \
@@ -88,7 +86,8 @@ RUN \
                         libxtst-dev \
                         liburing-dev \
                         libpng-dev libjpeg-turbo8-dev libtiff-dev libwebp-dev libgtest-dev python3 python3-venv python3-pip libsystemd-dev \ 
-			libgmock-dev && \
+			libgmock-dev \
+                        meson &&\
         apt-get clean autoclean && \
         apt-get autoremove --yes && \
         rm -rf /var/lib/apt
@@ -119,6 +118,36 @@ RUN \
 	cd ../ && \
 	rm -r ./ninja-* && \
 	rm ./*.tar.gz
+
+ENV PIPEWIRE_VER=1.6.0
+RUN \
+	curl -sSfLO https://gitlab.freedesktop.org/pipewire/pipewire/-/archive/${PIPEWIRE_VER}/pipewire-${PIPEWIRE_VER}.tar.gz && \
+	tar -xf pipewire-*.tar.gz && \
+	cd pipewire-* && \
+	meson setup build \
+                -Dprefix=/usr \
+                -Dbuildtype=release \
+                -Dbackend=ninja \
+                -D session-managers=[] && \
+	meson compile -C build && \
+	meson install -C build && \
+	cd ../.. && \
+	rm ./*.tar.gz && \
+	rm -r pipewire-*
+
+
+ENV OPENAL_VER=1.25.1
+RUN \
+	curl -sSfL -o openal.tar.gz https://github.com/kcat/openal-soft/archive/refs/tags/${OPENAL_VER}.tar.gz && \
+	tar -xf openal.tar.gz && \
+	cd openal-* && \
+	cmake -B build -G Ninja -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_INSTALL_LIBDIR=lib -DCMAKE_BUILD_TYPE=Release \
+	        -DCMAKE_C_COMPILER=$CLANG_BINARY -DCMAKE_CXX_COMPILER=$CLANGXX_BINARY && \
+	cmake --build build && \
+  	cmake --install build && \
+	cd .. && \
+	rm ./*.tar.gz && \
+	rm -r openal-*
 
 ENV STATIC_LLVM_VER=19.1.7
 RUN \
