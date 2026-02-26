@@ -64,7 +64,7 @@ RUN \
 	rm -r ./ninja-* && \
 	rm ./*.tar.gz
 
-ENV PIPEWIRE_VER=1.6.0
+ENV PIPEWIRE_VER=1.0.5
 RUN \
 	curl -sSfLO https://gitlab.freedesktop.org/pipewire/pipewire/-/archive/${PIPEWIRE_VER}/pipewire-${PIPEWIRE_VER}.tar.gz && \
 	tar -xf pipewire-*.tar.gz && \
