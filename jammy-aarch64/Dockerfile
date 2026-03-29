@@ -1,7 +1,7 @@
 FROM arm64v8/ubuntu:22.04
 LABEL maintainer="hcorion/kd-11"
 
-ENV LLVMVER=21
+ENV LLVMVER=22
 
 ENV CLANG_BINARY=clang-${LLVMVER}
 ENV CLANGXX_BINARY=clang++-${LLVMVER}
@@ -222,8 +222,10 @@ RUN \
         cd ../.. && \
         rm ./*.tar.xz && \
         rm -r ./ffmpeg-*
-        
-ENV QTVER=6.10.2
+
+
+# We don't build with liburing because Ubuntu 22.04 ships an old version of liburing and we don't neccesarily need it.
+ENV QTVER=6.11.0
 RUN \
         curl -sSfL -o qt.tar.xz https://download.qt.io/official_releases/qt/${QTVER%.*}/$QTVER/single/qt-everywhere-src-${QTVER}.tar.xz && \
         tar -xf qt.tar.xz && \
@@ -240,6 +242,7 @@ RUN \
                         -DFEATURE_system_xcb_xinput=ON \
                         -DFEATURE_openssl_linked=ON \
                         -DFEATURE_gds=OFF \
+                        -DFEATURE_liburing=OFF \
                         -DBUILD_qtwebview=OFF \
                         -DBUILD_qtwebchannel=OFF \
                         -DBUILD_qtwebengine=OFF \
@@ -270,7 +273,7 @@ RUN \
 	shellcheck --version
 
 # We need to build a custom version of SDL3 as well
-ENV SDLVER=3.4.0
+ENV SDLVER=3.4.2
 RUN \
 	curl -sSfL -o SDL.tar.gz https://github.com/libsdl-org/SDL/releases/download/release-${SDLVER}/SDL3-${SDLVER}.tar.gz && \
 	tar -xf SDL.tar.gz && \
