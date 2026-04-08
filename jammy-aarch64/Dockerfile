@@ -59,6 +59,7 @@ RUN \
                         libdrm-dev \
                         libdbus-1-dev \
                         yasm \
+                        nasm \
                         libgmp-dev \
                         libmp3lame-dev \
                         libopenjp2-7-dev \
@@ -204,7 +205,7 @@ RUN \
         rm ./*.tar.gz && \
         rm -r ./nv-codec-headers-*
 
-ENV FFMPEGVER=7.1.3
+ENV FFMPEGVER=8.1
 RUN \
         curl -sSfLO https://ffmpeg.org/releases/ffmpeg-${FFMPEGVER}.tar.xz && \
         tar -xf ./ffmpeg-*.tar.xz && \
@@ -287,7 +288,7 @@ RUN \
 	rm ./*.tar.gz && \
 	rm -r ./SDL*
 
-ENV OPENCV_VER=4.12.0
+ENV OPENCV_VER=4.13.0
 RUN \
 	curl -sSfL -o opencv.tar.gz https://github.com/opencv/opencv/archive/${OPENCV_VER}/opencv-${OPENCV_VER}.tar.gz && \
 	tar -xf opencv.tar.gz && \
