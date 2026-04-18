@@ -18,6 +18,7 @@ RUN \
         apt-get update -y && \
         apt-get install -y curl libcurl4-openssl-dev software-properties-common apt-transport-https && \
         curl -Lvs https://apt.llvm.org/llvm-snapshot.gpg.key | apt-key add - && \
+		add-apt-repository -y universe
         add-apt-repository -y "deb http://apt.llvm.org/jammy/ llvm-toolchain-jammy-${LLVMVER} main" && \
         add-apt-repository -y ppa:ubuntu-toolchain-r/test && \
         apt-get -y install \
@@ -27,6 +28,7 @@ RUN \
                         curl \
                         libfreetype6 \
                         xz-utils \
+						unzip \
                         openssl \
                         file \
                         sudo \
