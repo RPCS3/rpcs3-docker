@@ -27,6 +27,7 @@ RUN \
                         curl \
                         libfreetype6 \
                         xz-utils \
+						unzip \
                         openssl \
                         file \
                         sudo \
