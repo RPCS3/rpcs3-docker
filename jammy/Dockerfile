@@ -81,13 +81,13 @@ RUN \
 	rm -r pipewire-*
 
 
-ENV OPENAL_VER=1.25.1
+ENV OPENAL_VER=1.25.2
 RUN \
 	curl -sSfL -o openal.tar.gz https://github.com/kcat/openal-soft/archive/refs/tags/${OPENAL_VER}.tar.gz && \
 	tar -xf openal.tar.gz && \
 	cd openal-* && \
 	cmake -B build -G Ninja -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_INSTALL_LIBDIR=lib -DCMAKE_BUILD_TYPE=Release \
-		-DCMAKE_C_COMPILER=$CLANG_BINARY -DCMAKE_CXX_COMPILER=$CLANGXX_BINARY && \
+		-DCMAKE_C_COMPILER=$GCC_BINARY -DCMAKE_CXX_COMPILER=$GXX_BINARY && \
 	cmake --build build && \
   	cmake --install build && \
 	cd .. && \
@@ -169,7 +169,7 @@ RUN \
 	rm -r ./ffmpeg-*
 
 # We don't build with liburing because Ubuntu 22.04 ships an old version of liburing and we don't neccesarily need it.
-ENV QTVER=6.11.0
+ENV QTVER=6.11.1
 RUN \
 	curl -sSfL -o qt.tar.xz https://mirrors.ocf.berkeley.edu/qt/official_releases/qt/${QTVER%.*}/$QTVER/single/qt-everywhere-src-${QTVER}.tar.xz && \
 	tar -xf qt.tar.xz && \
