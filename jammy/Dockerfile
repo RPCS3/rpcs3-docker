@@ -149,7 +149,7 @@ RUN \
 	rm ./*.tar.gz && \
 	rm -r ./nv-codec-headers-*
 
-ENV FFMPEGVER=8.1
+ENV FFMPEGVER=8.1.1
 RUN \
 	curl -sSfLO https://ffmpeg.org/releases/ffmpeg-${FFMPEGVER}.tar.xz && \
 	tar -xf ./ffmpeg-*.tar.xz && \
@@ -198,7 +198,7 @@ RUN \
 	shellcheck --version
 
 # We need to build a custom version of SDL3 as well
-ENV SDLVER=3.4.4
+ENV SDLVER=3.4.10
 RUN \
 	curl -sSfL -o SDL.tar.gz https://github.com/libsdl-org/SDL/releases/download/release-${SDLVER}/SDL3-${SDLVER}.tar.gz && \
 	tar -xf SDL.tar.gz && \
