@@ -169,14 +169,33 @@ RUN \
 	rm -r ./ffmpeg-*
 
 # We don't build with liburing because Ubuntu 22.04 ships an old version of liburing and we don't neccesarily need it.
-ENV QTVER=6.11.1
+ENV QTVER=6.12.0
 RUN \
 	curl -sSfL -o qt.tar.xz https://mirrors.ocf.berkeley.edu/qt/official_releases/qt/${QTVER%.*}/$QTVER/single/qt-everywhere-src-${QTVER}.tar.xz && \
 	tar -xf qt.tar.xz && \
 	cd  qt-everywhere-src-* && \
 	mkdir build && cd build && \
-	cmake ../ -G Ninja -DCMAKE_BUILD_TYPE=MinSizeRel -DCMAKE_C_COMPILER=$CLANG_BINARY -DCMAKE_CXX_COMPILER=$CLANGXX_BINARY -DFEATURE_ffmpeg=ON -DFEATURE_gstreamer=OFF -DFEATURE_fontconfig=ON -DFEATURE_system_freetype=ON -DFEATURE_system_xcb_xinput=ON -DFEATURE_openssl_linked=ON -DFEATURE_gds=OFF -DFEATURE_liburing=OFF -DBUILD_qtwebview=OFF -DBUILD_qtwebchannel=OFF -DBUILD_qtwebengine=OFF -DBUILD_qtquick3d=OFF -DBUILD_qtgraphs=OFF -DBUILD_qtquick3dphysics=OFF -DBUILD_qtvirtualkeyboard=OFF -DBUILD_qt3d=OFF \
-	-DCMAKE_INSTALL_PREFIX=/usr && \
+	cmake ../ -G Ninja \
+		-DCMAKE_BUILD_TYPE=MinSizeRel \
+		-DCMAKE_C_COMPILER=$CLANG_BINARY \
+		-DCMAKE_CXX_COMPILER=$CLANGXX_BINARY \
+		-DFEATURE_ffmpeg=ON \
+		-DFEATURE_gstreamer=OFF \
+		-DFEATURE_fontconfig=ON \
+		-DFEATURE_system_freetype=ON \
+		-DFEATURE_system_xcb_xinput=ON \
+		-DFEATURE_openssl_linked=ON \
+		-DFEATURE_gds=OFF \
+		-DFEATURE_liburing=OFF \
+		-DBUILD_qtwebview=OFF \
+		-DBUILD_qtwebchannel=OFF \
+		-DBUILD_qtwebengine=OFF \
+		-DBUILD_qtquick3d=OFF \
+		-DBUILD_qtgraphs=OFF \
+		-DBUILD_qtquick3dphysics=OFF \
+		-DBUILD_qtvirtualkeyboard=OFF \
+		-DBUILD_qt3d=OFF \
+		-DCMAKE_INSTALL_PREFIX=/usr && \
 	echo "Need to cleanup for latest GCC/Clang" && \
 	sed -i 's/<< line.v0//' ../qtquick3d/src/3rdparty/embree/kernels/geometry/pointi.h && \
 	sed -i 's/<< a.u.lower//' ../qtquick3d/src/3rdparty/embree/kernels/subdiv/bezier_curve.h && \
@@ -198,7 +217,7 @@ RUN \
 	shellcheck --version
 
 # We need to build a custom version of SDL3 as well
-ENV SDLVER=3.4.14
+ENV SDLVER=3.4.18
 RUN \
 	curl -sSfL -o SDL.tar.gz https://github.com/libsdl-org/SDL/releases/download/release-${SDLVER}/SDL3-${SDLVER}.tar.gz && \
 	tar -xf SDL.tar.gz && \
@@ -212,14 +231,15 @@ RUN \
 	rm ./*.tar.gz && \
 	rm -r ./SDL*
 
-ENV OPENCV_VER=4.13.0
+ENV OPENCV_VER=4.14.0
 RUN \
 	curl -sSfL -o opencv.tar.gz https://github.com/opencv/opencv/archive/${OPENCV_VER}/opencv-${OPENCV_VER}.tar.gz && \
 	tar -xf opencv.tar.gz && \
 	cd opencv* && \
 	mkdir build && cd build && \
 	cmake ../ -G Ninja -DCMAKE_BUILD_TYPE=MinSizeRel -DCMAKE_C_COMPILER=$CLANG_BINARY -DCMAKE_CXX_COMPILER=$CLANGXX_BINARY -DCMAKE_CXX_STANDARD=17 \
-	-DCMAKE_INSTALL_PREFIX=/usr -DBUILD_TESTS=OFF -DWITH_XINE=OFF -DOPENCV_SKIP_PYTHON_LOADER=ON -DOPENCV_ENABLE_NONFREE=ON -DWITH_VULKAN=ON -DWITH_QT=OFF \
+	-DCMAKE_INSTALL_PREFIX=/usr -DWITH_XINE=OFF -DOPENCV_SKIP_PYTHON_LOADER=ON -DOPENCV_ENABLE_NONFREE=ON -DWITH_VULKAN=ON -DWITH_QT=OFF \
+	-DBUILD_LIST=core,imgproc \
 	-DBUILD_TESTS=OFF -DBUILD_PERF_TESTS=OFF -DBUILD_EXAMPLES=OFF \
 	-DCPU_BASELINE_REQUIRE=SSE2 && \
 	ninja && \
