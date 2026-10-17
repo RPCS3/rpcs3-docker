@@ -227,7 +227,7 @@ RUN \
 
 
 # We don't build with liburing because Ubuntu 22.04 ships an old version of liburing and we don't neccesarily need it.
-ENV QTVER=6.11.1
+ENV QTVER=6.12.0
 RUN \
         curl -sSfL -o qt.tar.xz https://download.qt.io/official_releases/qt/${QTVER%.*}/$QTVER/single/qt-everywhere-src-${QTVER}.tar.xz && \
         tar -xf qt.tar.xz && \
