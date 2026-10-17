@@ -27,7 +27,7 @@ RUN \
                         curl \
                         libfreetype6 \
                         xz-utils \
-						unzip \
+                        unzip \
                         openssl \
                         file \
                         sudo \
@@ -65,7 +65,7 @@ RUN \
                         libmp3lame-dev \
                         libopenjp2-7-dev \
                         libjack-dev \
-	                libtheora-dev \
+                        libtheora-dev \
                         libwebp-dev \
                         libopus-dev \
                         libvorbis-dev \
@@ -87,8 +87,8 @@ RUN \
                         libxss-dev \
                         libxtst-dev \
                         liburing-dev \
-                        libpng-dev libjpeg-turbo8-dev libtiff-dev libwebp-dev libgtest-dev python3 python3-venv python3-pip libsystemd-dev \ 
-			libgmock-dev \
+                        libpng-dev libjpeg-turbo8-dev libtiff-dev libwebp-dev libgtest-dev python3 python3-venv python3-pip libsystemd-dev \
+                        libgmock-dev \
                         meson &&\
         apt-get clean autoclean && \
         apt-get autoremove --yes && \
@@ -146,7 +146,7 @@ RUN \
 	cmake -B build -G Ninja -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_INSTALL_LIBDIR=lib -DCMAKE_BUILD_TYPE=Release \
 	        -DCMAKE_C_COMPILER=$GCC_BINARY -DCMAKE_CXX_COMPILER=$GXX_BINARY && \
 	cmake --build build && \
-  	cmake --install build && \
+	cmake --install build && \
 	cd .. && \
 	rm ./*.tar.gz && \
 	rm -r openal-*
@@ -255,9 +255,9 @@ RUN \
                         -DBUILD_qt3d=OFF \
                         -DCMAKE_INSTALL_PREFIX=/usr && \
         echo "Need to cleanup for latest GCC/Clang" && \
-	sed -i 's/<< line.v0//' ../qtquick3d/src/3rdparty/embree/kernels/geometry/pointi.h && \
-	sed -i 's/<< a.u.lower//' ../qtquick3d/src/3rdparty/embree/kernels/subdiv/bezier_curve.h && \
-	sed -i 's/<< a.u.upper//' ../qtquick3d/src/3rdparty/embree/kernels/subdiv/bezier_curve.h && \
+        sed -i 's/<< line.v0//' ../qtquick3d/src/3rdparty/embree/kernels/geometry/pointi.h && \
+        sed -i 's/<< a.u.lower//' ../qtquick3d/src/3rdparty/embree/kernels/subdiv/bezier_curve.h && \
+        sed -i 's/<< a.u.upper//' ../qtquick3d/src/3rdparty/embree/kernels/subdiv/bezier_curve.h && \
         ninja && \
         ninja install && \
         cd ../../ && \
@@ -275,7 +275,7 @@ RUN \
 	shellcheck --version
 
 # We need to build a custom version of SDL3 as well
-ENV SDLVER=3.4.14
+ENV SDLVER=3.4.18
 RUN \
 	curl -sSfL -o SDL.tar.gz https://github.com/libsdl-org/SDL/releases/download/release-${SDLVER}/SDL3-${SDLVER}.tar.gz && \
 	tar -xf SDL.tar.gz && \
