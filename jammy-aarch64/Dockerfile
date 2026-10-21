@@ -288,19 +288,3 @@ RUN \
 	cd ../.. && \
 	rm ./*.tar.gz && \
 	rm -r ./SDL*
-
-ENV OPENCV_VER=4.14.0
-RUN \
-	curl -sSfL -o opencv.tar.gz https://github.com/opencv/opencv/archive/${OPENCV_VER}/opencv-${OPENCV_VER}.tar.gz && \
-	tar -xf opencv.tar.gz && \
-	cd opencv* && \
-	mkdir build && cd build && \
-	cmake ../ -G Ninja -DCMAKE_BUILD_TYPE=MinSizeRel -DCMAKE_C_COMPILER=$CLANG_BINARY -DCMAKE_CXX_COMPILER=$CLANGXX_BINARY -DCMAKE_CXX_STANDARD=17 \
-	-DCMAKE_INSTALL_PREFIX=/usr -DWITH_XINE=OFF -DOPENCV_SKIP_PYTHON_LOADER=ON -DOPENCV_ENABLE_NONFREE=ON -DWITH_VULKAN=ON -DWITH_QT=OFF \
-	-DBUILD_LIST=core,imgproc \
-	-DBUILD_TESTS=OFF -DBUILD_PERF_TESTS=OFF -DBUILD_EXAMPLES=OFF && \
-	ninja && \
-	ninja install && \
-	cd ../.. && \
-	rm ./*.tar.gz && \
-	rm -r ./opencv*
