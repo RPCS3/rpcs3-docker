@@ -152,10 +152,16 @@ RUN \
 	rm -r openal-*
 
 ENV STATIC_LLVM_VER=22.1.8
+# ARMSX3 patch: https://github.com/ARMSX2/ARMSX3/commit/b5a715adcf6f81d210fa5fa4d45bc64857ee0f94
+COPY patches/armsx3-aarch64-ghc-emergency-spill.patch /tmp/armsx3-aarch64-ghc-emergency-spill.patch
 RUN \
 	curl -sSfLO https://github.com/llvm/llvm-project/releases/download/llvmorg-${STATIC_LLVM_VER}/llvm-project-${STATIC_LLVM_VER}.src.tar.xz && \
 	tar -xf llvm-*.tar.xz && \
 	cd llvm-*/llvm && \
+	echo "ab5ccb09631d73ad7acbf22814fbfdedd4608303675e8f973a6276e5b6dbe1f2  /tmp/armsx3-aarch64-ghc-emergency-spill.patch" | sha256sum -c - && \
+	git -C .. apply --check /tmp/armsx3-aarch64-ghc-emergency-spill.patch && \
+	git -C .. apply /tmp/armsx3-aarch64-ghc-emergency-spill.patch && \
+	rm /tmp/armsx3-aarch64-ghc-emergency-spill.patch && \
 	mkdir build && cd build && \
 	cmake .. -G Ninja -DCMAKE_C_COMPILER=$CLANG_BINARY -DCMAKE_CXX_COMPILER=$CLANGXX_BINARY -DCMAKE_INSTALL_PREFIX=/opt/llvm  \
 	-DLLVM_ENABLE_CXX1Y=ON -DLLVM_TARGETS_TO_BUILD="AArch64" -DCMAKE_BUILD_TYPE=MinSizeRel -DLLVM_USE_PERF=ON \
