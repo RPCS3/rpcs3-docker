@@ -25,7 +25,7 @@ RUN \
 	$GCC_BINARY $GXX_BINARY \
 	build-essential binutils git ccache bc $CLANG_BINARY $CLANGXX_BINARY $LLD_BINARY \
 	libasound2-dev freeglut3-dev libudev-dev libevdev-dev libpulse-dev libxrandr-dev libglvnd-dev \
-	'^libxcb.*-dev' libxcb-cursor0 libxcb-xinput-dev libxcursor-dev libx11-xcb-dev libxcb-util-dev libdrm-dev libdbus-1-dev \
+	'^libxcb.*-dev' libxcb-cursor0 libxcb-xinput-dev libxcursor-dev libx11-xcb-dev libxcb-util-dev libdrm-dev libdbus-1-dev libatspi2.0-dev \
 	libsndio-dev libxext-dev libxfixes-dev libxi-dev libxss-dev libxtst-dev \
 	libssl-dev libfontconfig1-dev libv4l-dev yasm libgmp-dev libmp3lame-dev libopenjp2-7-dev libjack-dev liburing-dev \
 	libtheora-dev libwebp-dev libopus-dev libvorbis-dev libvpx-dev libx264-dev libxml2-dev ocl-icd-opencl-dev \
@@ -187,6 +187,7 @@ RUN \
 		-DFEATURE_openssl_linked=ON \
 		-DFEATURE_gds=OFF \
 		-DFEATURE_liburing=OFF \
+		-DFEATURE_accessibility_atspi_bridge=ON \
 		-DBUILD_qtwebview=OFF \
 		-DBUILD_qtwebchannel=OFF \
 		-DBUILD_qtwebengine=OFF \
