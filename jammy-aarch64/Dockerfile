@@ -59,6 +59,7 @@ RUN \
                         libv4l-dev \
                         libdrm-dev \
                         libdbus-1-dev \
+                        libatspi2.0-dev \
                         yasm \
                         nasm \
                         libgmp-dev \
@@ -251,6 +252,7 @@ RUN \
                         -DFEATURE_openssl_linked=ON \
                         -DFEATURE_gds=OFF \
                         -DFEATURE_liburing=OFF \
+                        -DFEATURE_accessibility_atspi_bridge=ON \
                         -DBUILD_qtwebview=OFF \
                         -DBUILD_qtwebchannel=OFF \
                         -DBUILD_qtwebengine=OFF \
