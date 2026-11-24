@@ -169,7 +169,7 @@ RUN \
 	rm -r ./ffmpeg-*
 
 # We don't build with liburing because Ubuntu 22.04 ships an old version of liburing and we don't neccesarily need it.
-ENV QTVER=6.12.0
+ENV QTVER=6.12.1
 RUN \
 	curl -sSfL -o qt.tar.xz https://mirrors.ocf.berkeley.edu/qt/official_releases/qt/${QTVER%.*}/$QTVER/single/qt-everywhere-src-${QTVER}.tar.xz && \
 	tar -xf qt.tar.xz && \
